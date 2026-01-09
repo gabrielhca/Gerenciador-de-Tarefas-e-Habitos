@@ -48,4 +48,46 @@ projeto-d/
 │   └── utils.py           # Funções auxiliares e validadores
 │
 └── README.md              # Documentação do Projeto
+
 ```
+
+---
+
+## Como Executar
+
+Pré-requisitos: Python 3.x instalado.
+
+1. Clone o repositório:
+```bash
+git clone [https://github.com/gabrielhca/Gerenciador-de-Tarefas-e-Habitos.git](https://github.com/gabrielhca/Gerenciador-de-Tarefas-e-Habitos.git)
+
+```
+
+
+2. Navegue até a pasta do projeto:
+```bash
+cd Gerenciador-de-Tarefas-e-Habitos
+
+```
+
+
+3. Execute o arquivo principal:
+```bash
+python src/main.py
+
+```
+
+
+---
+
+## Contexto: LIPAI Onboarding
+
+Este projeto faz parte do treinamento do **Laboratório Interdisciplinar de Processamento e Análise de Imagens (LIPAI)**, vinculado à FACOM/UFU.
+
+**Stack Tecnológico do Treinamento:**
+
+* **Linguagem:** Python 3.x
+* **Versionamento:** Git / GitHub
+* **Paradigmas:** Estruturado e Orientado a Objetos
+
+
