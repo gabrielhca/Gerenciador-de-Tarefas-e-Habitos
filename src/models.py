@@ -1,5 +1,7 @@
 """ Estrutura de dados das tarefas e hábitos. """
 
+from src.utils import formatar_data_para_string
+
 
 class Tarefa:
     """ Constrói uma tarefa com título, descrição, data limite e status de conclusão. """
@@ -14,7 +16,8 @@ class Tarefa:
 
     def __str__(self):
         status = "[X]" if self.concluida else "[ ]"
-        return f"{self.id} - {status} {self.titulo} (Prazo: {self.data_limite})"
+        data_formatada = formatar_data_para_string(self.data_limite)
+        return f"{self.id} - {status} {self.titulo} (Prazo: {data_formatada})"
 
     def __repr__(self):
         return f"Tarefa(id={self.id}, titulo={self.titulo}, descricao={self.descricao}, data_limite={self.data_limite}, concluida={self.concluida})"
