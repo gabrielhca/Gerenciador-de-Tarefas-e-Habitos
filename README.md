@@ -73,7 +73,7 @@ cd Gerenciador-de-Tarefas-e-Habitos
 
 3. Execute o arquivo principal:
 ```bash
-python src/main.py
+python -m src.main
 
 ```
 
