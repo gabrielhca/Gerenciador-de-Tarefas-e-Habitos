@@ -1,7 +1,10 @@
-""" main """
+""" Módulo principal da aplicação. """
+
+from src.repositories import RepositorioTarefas, RepositorioHabitos
+from src.views import exibir_dados, preencher_dados_tarefa, preencher_dados_habito, solicitar_id
 
 
-def menu_tarefas():
+def menu_tarefas(repositorio):
     """Exibe o sub-menu de tarefas e trata as opções."""
     print("\n-- Gerenciar Tarefas --")
     print("1. Cadastrar Tarefa")
@@ -12,21 +15,22 @@ def menu_tarefas():
     opcao = input("Escolha uma opção: ")
 
     if opcao == '1':
-        # cadastrar_tarefa()
-        print(">> Iniciando cadastro de tarefa...")
+        dados = preencher_dados_tarefa()
+        repositorio.salvar_dados_csv(dados[0], dados[1], dados[2], dados[3])
     elif opcao == '2':
-        # listar_tarefas()
-        print(">> Listando tarefas...")
+        exibir_dados(repositorio.lista_tarefas, "tarefas")
     elif opcao == '3':
-        # marcar_tarefa_concluida()
-        print(">> Concluindo tarefa...")
+        id_tarefa = solicitar_id(repositorio.lista_tarefas, "tarefas")
+        if id_tarefa:
+            tarefa_alterada = repositorio.marcar_tarefa_concluida(id_tarefa.id)
+            print(f"Tarefa '{tarefa_alterada.titulo}' marcada como concluída!")
     elif opcao == '4':
         return
     else:
         print("Opção inválida.")
 
 
-def menu_habitos():
+def menu_habitos(repositorio):
     """Exibe o sub-menu de hábitos e trata as opções."""
     print("\n-- Gerenciar Hábitos --")
     print("1. Cadastrar Hábito")
@@ -37,14 +41,17 @@ def menu_habitos():
     opcao = input("Escolha uma opção: ")
 
     if opcao == '1':
-        # cadastrar_habito()
-        print(">> Iniciando cadastro de hábito...")
+        dados = preencher_dados_habito()
+        repositorio.salvar_dados_csv(dados[0], dados[1], dados[2])
     elif opcao == '2':
-        # listar_habitos()
-        print(">> Listando hábitos...")
+        exibir_dados(repositorio.lista_habitos, "hábitos")
     elif opcao == '3':
-        # registrar_execucao_habito()
-        print(">> Registrando execução...")
+        id_habito = solicitar_id(repositorio.lista_habitos, "hábitos")
+        if id_habito:
+            habito_alterado = repositorio.registrar_execucao_habito(
+                id_habito.id)
+            print(
+                f"Hábito '{habito_alterado[0]}' executado! Total de execuções: {habito_alterado[1]}")
     elif opcao == '4':
         return
     else:
@@ -53,6 +60,8 @@ def menu_habitos():
 
 def main():
     """Função principal que inicia o programa."""
+    repo_tarefas = RepositorioTarefas()
+    repo_habitos = RepositorioHabitos()
     print("Bem vindo ao Gerenciador de Tarefas e Hábitos!")
 
     while True:
@@ -64,9 +73,9 @@ def main():
         escolha = input("Escolha uma opção: ")
 
         if escolha == '1':
-            menu_tarefas()
+            menu_tarefas(repo_tarefas)
         elif escolha == '2':
-            menu_habitos()
+            menu_habitos(repo_habitos)
         elif escolha == '3':
             print("Saindo do programa. Até mais!")
             break
