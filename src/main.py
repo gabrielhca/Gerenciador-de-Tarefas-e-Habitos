@@ -1,6 +1,7 @@
 """ Módulo principal da aplicação. """
 
-from src.repositories import RepositorioTarefas, RepositorioHabitos
+from src.repositorio_tarefas import RepositorioTarefas
+from src.repositorio_habitos import RepositorioHabitos
 from src.views import exibir_dados, preencher_dados_tarefa, preencher_dados_habito, solicitar_id
 
 
