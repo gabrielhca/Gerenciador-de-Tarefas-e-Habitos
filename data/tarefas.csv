@@ -1,0 +1,6 @@
+id,titulo,descricao,data_limite,concluida
+1,Fazer feira,Comprar frutas e verduras,10-01-2026,FALSE
+2,Estudar para prova,Revisar capítulos 1 a 5,15-01-2026,FALSE
+3,Lavar o carro,Levar ao lava rápido,12-01-2026,TRUE
+4,Pagar contas,Pagar conta de luz e água,05-01-2026,TRUE
+5,Organizar armário,Separar roupas para doação,20-01-2026,FALSE6,Jogar truco,jogar truco com amigos,12/12/2025,False
