@@ -1,6 +1,10 @@
-id,nome,frequencia,contador_execucoes
-1,Exercício físico,diária,15
-2,Leitura de livros,semana,8
-3,Meditação,diária,20
-4,Estudar idiomas,semana,5
-5,Cozinhar refeições saudáveis,diária,12
+id,nome,frequencia,contador_execucoes,data_criacao,data_ultima_execucao
+1,Exercicio fisico,diaria,85,02-10-2025,16-01-2026
+2,Leitura de livros,semana,14,05-10-2025,14-01-2026
+3,Meditacao,diaria,10,10-10-2025,01-11-2025
+4,Estudar idiomas,semana,1,10-01-2026,15-01-2026
+5,Beber 2L agua,diaria,1,16-01-2026,16-01-2026
+6,Passear com o cachorro,diaria,60,15-11-2025,17-01-2026
+7,Cuidar do jardim,semana,5,01-12-2025,10-01-2026
+8,Estudar programação,diaria,90,05-10-2025,16-01-2026
+9,Visitar familia,semana,12,10-10-2025,11-01-2026

@@ -17,7 +17,7 @@ def menu_tarefas(repositorio):
 
     if opcao == '1':
         dados = preencher_dados_tarefa()
-        repositorio.salvar_dados_csv(dados[0], dados[1], dados[2], dados[3])
+        repositorio.salvar_dados_csv(dados[0], dados[1], dados[2])
     elif opcao == '2':
         exibir_dados(repositorio.lista_tarefas, "tarefas")
     elif opcao == '3':

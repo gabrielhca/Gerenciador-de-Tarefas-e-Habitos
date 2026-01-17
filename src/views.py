@@ -1,6 +1,6 @@
 """ Módulo responsável pela interface de usuário (visualizações) para tarefas e hábitos. """
 
-from src.utils import ler_sim_nao, formatar_data
+from src.utils import formatar_data
 
 
 def exibir_dados(dados, tipo):
@@ -17,14 +17,12 @@ def preencher_dados_tarefa():
     """ Solicita ao usuário os dados para criar uma nova tarefa. """
     titulo = input("Título da tarefa: ")
     descricao = input("Descrição da tarefa: ")
-    
+
     while True:
         data_limite = input("Data limite (DD-MM-AAAA): ")
         if formatar_data(data_limite):
             break
-            
-    concluida = ler_sim_nao("A tarefa está concluída?")
-    return titulo, descricao, data_limite, concluida
+    return titulo, descricao, data_limite
 
 
 def preencher_dados_habito():

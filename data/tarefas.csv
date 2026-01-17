@@ -1,6 +1,10 @@
-id,titulo,descricao,data_limite,concluida
-1,Fazer feira,Comprar frutas e verduras,10-01-2026,FALSE
-2,Estudar para prova,Revisar capítulos 1 a 5,15-01-2026,FALSE
-3,Lavar o carro,Levar ao lava rápido,12-01-2026,TRUE
-4,Pagar contas,Pagar conta de luz e água,05-01-2026,TRUE
-5,Organizar armário,Separar roupas para doação,20-01-2026,FALSE6,Jogar truco,jogar truco com amigos,12/12/2025,False
+id,titulo,descricao,data_limite,concluida,data_criacao,data_conclusao
+1,Comprar passagens,Passagens para férias,10-11-2025,TRUE,05-11-2025,08-11-2025
+2,Relatorio Anual,Fechar relatorio da empresa,17-12-2025,TRUE,10-12-2025,16-12-2025
+3,Manutencao PC,Limpar cooler,07-01-2026,TRUE,05-01-2026,06-01-2026
+4,Pagar IPTU,Primeira parcela,10-01-2026,FALSE,15-12-2025,
+5,Dentista,Remarcar consulta,12-01-2026,FALSE,20-12-2025,
+6,Devolver livro,Biblioteca municipal,15-01-2026,FALSE,01-01-2026,
+7,Planejar Aniversario,Comprar bolo,25-01-2026,FALSE,15-01-2026,
+8,Vistoria Carro,Agendar vistoria,30-01-2026,FALSE,16-01-2026,
+9,Ler Documentacao,Estudar nova lib python,01-02-2026,FALSE,17-01-2026,

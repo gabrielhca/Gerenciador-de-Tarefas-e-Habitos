@@ -1,7 +1,9 @@
 """ Módulo responsável pela persistência de dados (repositórios) de hábitos. """
 
 import os
+from datetime import date
 from src.models import Habito
+from src.utils import formatar_data, formatar_data_para_string
 
 
 class RepositorioHabitos():
@@ -20,7 +22,8 @@ class RepositorioHabitos():
         arquivo_existe = os.path.exists(self.ARQUIVO_CSV)
         with open(self.ARQUIVO_CSV, mode="a", newline="", encoding="utf-8") as arquivo:
             if not arquivo_existe:
-                arquivo.write("id,nome,frequencia,contador_execucoes\n")
+                arquivo.write(
+                    "id,nome,frequencia,contador_execucoes,data_criacao,data_ultima_execucao\n")
 
     def carrega_dados_csv(self):
         """ Lê os dados do arquivo CSV e popula a lista de hábitos. """
@@ -37,8 +40,19 @@ class RepositorioHabitos():
                     frequencia = partes[2]
                     contador_execucoes = int(partes[3])
 
+                    # Protege contra IndexError
+                    if len(partes) > 4 and partes[4]:
+                        data_criacao = formatar_data(partes[4])
+                    else:
+                        data_criacao = date.today()
+
+                    if len(partes) > 5 and partes[5]:
+                        data_ultima_execucao = formatar_data(partes[5])
+                    else:
+                        data_ultima_execucao = None
+
                     nova_habito = Habito(
-                        habito_id, nome, frequencia, contador_execucoes)
+                        habito_id, nome, frequencia, contador_execucoes, data_criacao, data_ultima_execucao)
                     self.lista_habitos.append(nova_habito)
         except FileNotFoundError:
             self.arquivo_existe()
@@ -46,26 +60,39 @@ class RepositorioHabitos():
     def salvar_dados_csv(self, nome, frequencia, contador_execucoes):
         """ Adiciona um novo hábito ao arquivo CSV. """
         self.arquivo_existe()
+
+        data_criacao = date.today()
+        data_criacao_str = formatar_data_para_string(data_criacao)
+        data_ultima_execucao = None
+        data_ultima_execucao_str = ""
+
         with open(self.ARQUIVO_CSV, mode="a", newline="", encoding="utf-8") as arquivo:
             self.ultimo_id += 1
             arquivo.write(
-                f"{self.ultimo_id},{nome},{frequencia},{contador_execucoes}\n")
+                f"{self.ultimo_id},{nome},{frequencia},{contador_execucoes},{data_criacao_str},{data_ultima_execucao_str}\n")
             novo_habito = Habito(self.ultimo_id, nome,
-                                 frequencia, contador_execucoes)
+                                 frequencia, contador_execucoes, data_criacao, data_ultima_execucao)
             self.lista_habitos.append(novo_habito)
 
     def salvar_arquivo_completo(self):
         """ Reescreve o CSV inteiro com o estado atual dos hábitos, garantindo a integridade dos dados. """
         with open(self.ARQUIVO_CSV, mode="w", newline="", encoding="utf-8") as arquivo:
-            arquivo.write("id,nome,frequencia,contador_execucoes\n")
+            arquivo.write(
+                "id,nome,frequencia,contador_execucoes,data_criacao,data_ultima_execucao\n")
             for habito in self.lista_habitos:
+                data_criacao_str = formatar_data_para_string(
+                    habito.data_criacao)
+                data_ultima_execucao_str = formatar_data_para_string(
+                    habito.data_ultima_execucao) if habito.data_ultima_execucao else ""
+
                 arquivo.write(
-                    f"{habito.id},{habito.nome},{habito.frequencia},{habito.contador_execucoes}\n")
+                    f"{habito.id},{habito.nome},{habito.frequencia},{habito.contador_execucoes},{data_criacao_str},{data_ultima_execucao_str}\n")
 
     def registrar_execucao_habito(self, habito_id):
         """ Registra a execução de um hábito, incrementando seu contador."""
         for habito in self.lista_habitos:
             if habito.id == habito_id:
                 habito.contador_execucoes += 1
+                habito.data_ultima_execucao = date.today()
                 self.salvar_arquivo_completo()
                 return habito.nome, habito.contador_execucoes
