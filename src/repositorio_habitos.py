@@ -1,6 +1,6 @@
 """ Módulo responsável pela persistência de dados (repositórios) de hábitos. """
 
-import os
+from pathlib import Path
 from datetime import date
 from src.models import Habito
 from src.utils import formatar_data, formatar_data_para_string
@@ -19,7 +19,7 @@ class RepositorioHabitos():
 
     def arquivo_existe(self):
         """ Verifica se o arquivo CSV existe; se não, cria com o cabeçalho. """
-        arquivo_existe = os.path.exists(self.ARQUIVO_CSV)
+        arquivo_existe = Path(self.ARQUIVO_CSV).exists()
         with open(self.ARQUIVO_CSV, mode="a", newline="", encoding="utf-8") as arquivo:
             if not arquivo_existe:
                 arquivo.write(
@@ -115,4 +115,3 @@ class RepositorioHabitos():
                     habito.frequencia = frequencia
                 self.salvar_arquivo_completo()
                 return habito
-            
