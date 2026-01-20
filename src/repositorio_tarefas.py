@@ -107,3 +107,11 @@ class RepositorioTarefas():
                 tarefa.data_conclusao = date.today()
                 self.salvar_arquivo_completo()
                 return tarefa
+
+    def excluir_tarefa(self, tarefa_id):
+        """ Excluir uma tarefa do repositório. """
+        for tarefa in self.lista_tarefas:
+            if tarefa.id == tarefa_id:
+                self.lista_tarefas.remove(tarefa)
+                self.salvar_arquivo_completo()
+                return tarefa

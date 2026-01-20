@@ -96,3 +96,11 @@ class RepositorioHabitos():
                 habito.data_ultima_execucao = date.today()
                 self.salvar_arquivo_completo()
                 return habito.nome, habito.contador_execucoes
+
+    def excluir_habito(self, habito_id):
+        """ Excluir um hábito do repositório. """
+        for habito in self.lista_habitos:
+            if habito.id == habito_id:
+                self.lista_habitos.remove(habito)
+                self.salvar_arquivo_completo()
+                return habito
