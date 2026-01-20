@@ -104,3 +104,15 @@ class RepositorioHabitos():
                 self.lista_habitos.remove(habito)
                 self.salvar_arquivo_completo()
                 return habito
+
+    def editar_habito(self, habito_id, nome=None, frequencia=None):
+        """ Edita os dados de um hábito existente. """
+        for habito in self.lista_habitos:
+            if habito.id == habito_id:
+                if nome:
+                    habito.nome = nome
+                if frequencia:
+                    habito.frequencia = frequencia
+                self.salvar_arquivo_completo()
+                return habito
+            

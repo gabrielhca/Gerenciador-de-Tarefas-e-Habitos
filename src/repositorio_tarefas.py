@@ -115,3 +115,18 @@ class RepositorioTarefas():
                 self.lista_tarefas.remove(tarefa)
                 self.salvar_arquivo_completo()
                 return tarefa
+
+    def editar_tarefa(self, tarefa_id, titulo=None, descricao=None, data_limite=None):
+        """ Edita os dados de uma tarefa existente. """
+        for tarefa in self.lista_tarefas:
+            if tarefa.id == tarefa_id:
+                if titulo:
+                    tarefa.titulo = titulo
+                if descricao:
+                    tarefa.descricao = descricao
+                if data_limite:
+                    tarefa.data_limite = formatar_data(data_limite)
+                self.salvar_arquivo_completo()
+                return tarefa
+
+    

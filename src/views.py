@@ -1,6 +1,6 @@
 """ Módulo responsável pela interface de usuário (visualizações) para tarefas e hábitos. """
 
-from src.utils import formatar_data
+from src.utils import formatar_data, formatar_data_para_string
 from src.relatorio_habitos import verificar_status_habito
 
 
@@ -24,6 +24,36 @@ def preencher_dados_tarefa():
         if formatar_data(data_limite):
             break
     return titulo, descricao, data_limite
+
+
+def editar_dados_tarefa(tarefa):
+    """ Solicita novos dados para uma tarefa, mantendo o atual se vazio. """
+    print(f"Editando Tarefa: {tarefa.titulo}")
+    print("Deixe em branco para manter o valor atual.")
+
+    titulo = input(f"Novo título ({tarefa.titulo}): ")
+    descricao = input(f"Nova descrição ({tarefa.descricao}): ")
+
+    while True:
+        data_limite_str = formatar_data_para_string(tarefa.data_limite)
+        data_limite = input(f"Nova data limite ({data_limite_str}): ")
+        if not data_limite:
+            break
+        if formatar_data(data_limite):
+            break
+
+    return titulo, descricao, data_limite
+
+
+def editar_dados_habito(habito):
+    """ Solicita novos dados para um hábito, mantendo o atual se vazio. """
+    print(f"Editando Hábito: {habito.nome}")
+    print("Deixe em branco para manter o valor atual.")
+
+    nome = input(f"Novo nome ({habito.nome}): ")
+    frequencia = input(f"Nova frequência ({habito.frequencia}): ")
+
+    return nome, frequencia
 
 
 def preencher_dados_habito():
