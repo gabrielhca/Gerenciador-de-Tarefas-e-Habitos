@@ -22,20 +22,15 @@ from src.relatorio_tarefas import (
 from src.relatorio_habitos import gerar_desempenho_habitos
 
 
-def menu_tarefas(repositorio):
-    """Exibe o sub-menu de tarefas e trata as opções."""
+def gerenciar_tarefas(repositorio):
+    """Exibe o sub-menu de gerenciamento de tarefas."""
 
     print("\n-- Gerenciar Tarefas --")
     print("1. Cadastrar Tarefa")
     print("2. Editar Tarefa")
     print("3. Marcar Tarefa como Concluída")
     print("4. Excluir Tarefa")
-    print("5. Listar Todas as Tarefas")
-    print("6. Listar Pendentes")
-    print("7. Listar Atrasadas")
-    print("8. Listar Concluídas")
-    print("9. Relatório de Desempenho")
-    print("10. Voltar")
+    print("5. Voltar")
 
     opcao = input("Escolha uma opção: ")
 
@@ -60,36 +55,53 @@ def menu_tarefas(repositorio):
             tarefa_removida = repositorio.excluir_tarefa(id_tarefa.id)
             print(f"Tarefa '{tarefa_removida.titulo}' excluída!")
     elif opcao == '5':
-        exibir_dados(repositorio.lista_tarefas, "tarefas")
-    elif opcao == '6':
-        exibir_dados(filtrar_tarefas_pendentes(
-            repositorio.lista_tarefas), "Tarefas Pendentes")
-    elif opcao == '7':
-        exibir_dados(filtrar_tarefas_atrasadas(
-            repositorio.lista_tarefas), "Tarefas Atrasadas")
-    elif opcao == '8':
-        exibir_dados(filtrar_tarefas_concluidas(
-            repositorio.lista_tarefas), "Tarefas Concluídas")
-    elif opcao == '9':
-        relatorio = gerar_desempenho_tarefas(repositorio.lista_tarefas)
-        exibir_relatorio_tarefas(relatorio)
-    elif opcao == '10':
         return
     else:
         print("Opção inválida.")
 
 
-def menu_habitos(repositorio):
-    """Exibe o sub-menu de hábitos e trata as opções."""
+def relatorios_tarefas(repositorio):
+    """Exibe o sub-menu de relatórios de tarefas."""
+
+    print("\n-- Relatórios de Tarefas --")
+    print("1. Listar Todas as Tarefas")
+    print("2. Listar Pendentes")
+    print("3. Listar Atrasadas")
+    print("4. Listar Concluídas")
+    print("5. Relatório de Desempenho")
+    print("6. Voltar")
+
+    opcao = input("Escolha uma opção: ")
+
+    if opcao == '1':
+        exibir_dados(repositorio.lista_tarefas, "tarefas")
+    elif opcao == '2':
+        exibir_dados(filtrar_tarefas_pendentes(
+            repositorio.lista_tarefas), "Tarefas Pendentes")
+    elif opcao == '3':
+        exibir_dados(filtrar_tarefas_atrasadas(
+            repositorio.lista_tarefas), "Tarefas Atrasadas")
+    elif opcao == '4':
+        exibir_dados(filtrar_tarefas_concluidas(
+            repositorio.lista_tarefas), "Tarefas Concluídas")
+    elif opcao == '5':
+        relatorio = gerar_desempenho_tarefas(repositorio.lista_tarefas)
+        exibir_relatorio_tarefas(relatorio)
+    elif opcao == '6':
+        return
+    else:
+        print("Opção inválida.")
+
+
+def gerenciar_habitos(repositorio):
+    """Exibe o sub-menu de gerenciamento de hábitos."""
+
     print("\n-- Gerenciar Hábitos --")
     print("1. Cadastrar Hábito")
     print("2. Editar Hábito")
     print("3. Registrar Execução de Hábito")
     print("4. Excluir Hábito")
-    print("5. Listar Hábitos")
-    print("6. Status dos Hábitos")
-    print("7. Relatório de Desempenho")
-    print("8. Voltar")
+    print("5. Voltar")
 
     opcao = input("Escolha uma opção: ")
 
@@ -116,13 +128,30 @@ def menu_habitos(repositorio):
             habito_removido = repositorio.excluir_habito(id_habito.id)
             print(f"Hábito '{habito_removido.nome}' excluído!")
     elif opcao == '5':
+        return
+    else:
+        print("Opção inválida.")
+
+
+def relatorios_habitos(repositorio):
+    """Exibe o sub-menu de relatórios de hábitos."""
+
+    print("\n-- Relatórios de Hábitos --")
+    print("1. Listar Hábitos")
+    print("2. Status dos Hábitos")
+    print("3. Relatório de Desempenho")
+    print("4. Voltar")
+
+    opcao = input("Escolha uma opção: ")
+
+    if opcao == '1':
         exibir_dados(repositorio.lista_habitos, "hábitos")
-    elif opcao == '6':
+    elif opcao == '2':
         exibir_status_habitos(repositorio.lista_habitos)
-    elif opcao == '7':
+    elif opcao == '3':
         relatorio = gerar_desempenho_habitos(repositorio.lista_habitos)
         exibir_relatorio_habitos(relatorio)
-    elif opcao == '8':
+    elif opcao == '4':
         return
     else:
         print("Opção inválida.")
@@ -137,17 +166,23 @@ def main():
     while True:
         print("\n== Menu Principal ==")
         print("1. Gerenciar Tarefas")
-        print("2. Gerenciar Hábitos")
-        print("3. Sair")
+        print("2. Relatórios de Tarefas")
+        print("3. Gerenciar Hábitos")
+        print("4. Relatórios de Hábitos")
+        print("5. Sair")
 
         escolha = input("Escolha uma opção: ")
 
         if escolha == '1':
-            menu_tarefas(repo_tarefas)
+            gerenciar_tarefas(repo_tarefas)
         elif escolha == '2':
-            menu_habitos(repo_habitos)
+            relatorios_tarefas(repo_tarefas)
         elif escolha == '3':
-            print("Saindo do programa. Até mais!")
+            gerenciar_habitos(repo_habitos)
+        elif escolha == '4':
+            relatorios_habitos(repo_habitos)
+        elif escolha == '5':
+            print("Encerrado.")
             break
         else:
             print("Opção inválida, tente novamente.")
