@@ -39,7 +39,7 @@ class RepositorioTarefas():
                     titulo = partes[1]
                     descricao = partes[2]
                     data_limite = formatar_data(partes[3])
-                    status_conclusao = partes[4].lower()
+                    status_conclusao = partes[4] == "1"
 
                     # Protege contra IndexError
                     if len(partes) > 5 and partes[5]:
@@ -52,7 +52,7 @@ class RepositorioTarefas():
                         data_conclusao = None
 
                     nova_tarefa = Tarefa(
-                        tarefa_id, titulo, descricao, data_limite, status_conclusao == "true", data_criacao, data_conclusao)
+                        tarefa_id, titulo, descricao, data_limite, status_conclusao, data_criacao, data_conclusao)
                     self.lista_tarefas.append(nova_tarefa)
         except FileNotFoundError:
             self.arquivo_existe()
@@ -71,8 +71,9 @@ class RepositorioTarefas():
 
         with open(self.ARQUIVO_CSV, mode="a", newline="", encoding="utf-8") as arquivo:
             self.ultimo_id += 1
+            concluida_str = "1" if concluida else "0"
             arquivo.write(
-                f"{self.ultimo_id},{titulo},{descricao},{data_limite_str},{concluida},{data_criacao_str},{data_conclusao_str}\n")
+                f"{self.ultimo_id},{titulo},{descricao},{data_limite_str},{concluida_str},{data_criacao_str},{data_conclusao_str}\n")
             nova_tarefa = Tarefa(
                 self.ultimo_id,
                 titulo,
@@ -96,8 +97,9 @@ class RepositorioTarefas():
                     tarefa.data_criacao)
                 data_conclusao_str = formatar_data_para_string(
                     tarefa.data_conclusao) if tarefa.data_conclusao else ""
+                concluida_str = "1" if tarefa.concluida else "0"
                 arquivo.write(
-                    f"{tarefa.id},{tarefa.titulo},{tarefa.descricao},{data_limite_str},{tarefa.concluida},{data_criacao_str},{data_conclusao_str}\n")
+                    f"{tarefa.id},{tarefa.titulo},{tarefa.descricao},{data_limite_str},{concluida_str},{data_criacao_str},{data_conclusao_str}\n")
 
     def marcar_tarefa_concluida(self, tarefa_id):
         """ Marca uma tarefa como concluída. """
