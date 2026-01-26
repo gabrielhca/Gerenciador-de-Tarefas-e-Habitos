@@ -71,7 +71,7 @@ class Tarefa:
 class Habito:
     """ Constrói um hábito com nome, frequência e contador de execuções. """
 
-    def __init__(self, habito_id, nome, frequencia, contador_execucoes, data_criacao=None, data_ultima_execucao=None):
+    def __init__(self, habito_id, nome, frequencia, contador_execucoes=0, data_criacao=None, data_ultima_execucao=None):
         """ Inicializa um novo hábito. """
         self.id = habito_id
         self.nome = nome
@@ -111,7 +111,12 @@ class Habito:
 
         nome = partes[1]
         frequencia = partes[2]
-        contador_execucoes = int(partes[3])
+        try:
+            valor_contador = partes[3].strip()
+            contador_execucoes = int(valor_contador) if valor_contador else 0
+        except ValueError:
+            contador_execucoes = 0
+
 
         # Protege contra IndexError
         if len(partes) > 4 and partes[4]:
