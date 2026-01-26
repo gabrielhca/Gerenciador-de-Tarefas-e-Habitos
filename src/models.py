@@ -16,6 +16,14 @@ class Tarefa:
         self.data_criacao = data_criacao
         self.data_conclusao = data_conclusao
 
+    def __eq__(self, valor):
+        if isinstance(valor, Tarefa):
+            return self.id == valor.id
+        return False
+    
+    def __hash__(self):
+        return hash(self.id)
+
     def __str__(self):
         status = "[X]" if self.concluida else "[ ]"
         data_formatada = formatar_data_para_string(self.data_limite)
@@ -36,6 +44,14 @@ class Habito:
         self.contador_execucoes = contador_execucoes
         self.data_criacao = data_criacao
         self.data_ultima_execucao = data_ultima_execucao
+
+    def __eq__(self, valor):
+        if isinstance(valor, Habito):
+            return self.id == valor.id
+        return False
+    
+    def __hash__(self):
+        return hash(self.id)
 
     def __str__(self):
         return f"{self.id} - {self.nome} (Frequência: {self.frequencia}, Execuções: {self.contador_execucoes})"
