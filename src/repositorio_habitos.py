@@ -3,7 +3,7 @@
 from pathlib import Path
 from datetime import date
 from src.models import Habito
-from src.utils import formatar_data, formatar_data_para_string
+from src.utils import formatar_data_para_string
 
 
 class RepositorioHabitos():
@@ -27,7 +27,6 @@ class RepositorioHabitos():
 
     def carrega_dados_csv(self):
         """ Lê os dados do arquivo CSV e popula a lista de hábitos. """
-
         try:
             with open(self.ARQUIVO_CSV, mode="r", encoding='utf-8') as arquivo:
                 next(arquivo)

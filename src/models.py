@@ -3,6 +3,7 @@
 from src.utils import formatar_data_para_string, formatar_data
 from datetime import date
 
+
 class Tarefa:
     """ Constrói uma tarefa com título, descrição, data limite e status de conclusão. """
 
@@ -19,14 +20,14 @@ class Tarefa:
     @classmethod
     def from_csv(cls, linha):
         """ Cria uma instância de Tarefa a partir de uma linha CSV. """
-        
+
         partes = linha.strip().split(",")
         tarefa_id = int(partes[0])
-        
+
         titulo = partes[1]
         descricao = partes[2]
         data_limite = formatar_data(partes[3])
-        status_conclusao = partes[4].lower() == "true"
+        status_conclusao = partes[4] == "1"
 
         # Protege contra IndexError
         if len(partes) > 5 and partes[5]:
@@ -44,7 +45,7 @@ class Tarefa:
         if isinstance(outro, Tarefa):
             return self.id == outro.id
         return False
-    
+
     def __hash__(self):
         return hash(self.id)
 
@@ -72,7 +73,7 @@ class Habito:
     @classmethod
     def from_csv(cls, linha):
         """ Cria uma instância de Habito a partir de uma linha CSV. """
-        
+
         partes = linha.strip().split(",")
         habito_id = int(partes[0])
 
@@ -89,15 +90,14 @@ class Habito:
             data_ultima_execucao = formatar_data(partes[5])
         else:
             data_ultima_execucao = None
-            
+
         return cls(habito_id, nome, frequencia, contador_execucoes, data_criacao, data_ultima_execucao)
-        
 
     def __eq__(self, outro):
         if isinstance(outro, Habito):
             return self.id == outro.id
         return False
-    
+
     def __hash__(self):
         return hash(self.id)
 
