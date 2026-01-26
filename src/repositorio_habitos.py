@@ -32,28 +32,10 @@ class RepositorioHabitos():
             with open(self.ARQUIVO_CSV, mode="r", encoding='utf-8') as arquivo:
                 next(arquivo)
                 for linha in arquivo:
-                    partes = linha.strip().split(",")
-                    habito_id = int(partes[0])
-                    if self.ultimo_id < habito_id:
-                        self.ultimo_id = habito_id
-                    nome = partes[1]
-                    frequencia = partes[2]
-                    contador_execucoes = int(partes[3])
-
-                    # Protege contra IndexError
-                    if len(partes) > 4 and partes[4]:
-                        data_criacao = formatar_data(partes[4])
-                    else:
-                        data_criacao = date.today()
-
-                    if len(partes) > 5 and partes[5]:
-                        data_ultima_execucao = formatar_data(partes[5])
-                    else:
-                        data_ultima_execucao = None
-
-                    nova_habito = Habito(
-                        habito_id, nome, frequencia, contador_execucoes, data_criacao, data_ultima_execucao)
-                    self.lista_habitos.append(nova_habito)
+                    novo_habito = Habito.from_csv(linha)
+                    if self.ultimo_id < novo_habito.id:
+                        self.ultimo_id = novo_habito.id
+                    self.lista_habitos.append(novo_habito)
         except FileNotFoundError:
             self.arquivo_existe()
 
