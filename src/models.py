@@ -17,6 +17,16 @@ class Tarefa:
         self.data_criacao = data_criacao
         self.data_conclusao = data_conclusao
 
+    @property
+    def titulo(self):
+        return self._titulo
+    @titulo.setter
+    def titulo(self, valor):
+        """ Define o título, ma rejeita títulos vazios. """
+        if not valor or not isinstance(valor,str) or not valor.strip():
+            raise ValueError("O título da tarefa não pode ser vazio.")
+        self._titulo = valor
+
     @classmethod
     def from_csv(cls, linha):
         """ Cria uma instância de Tarefa a partir de uma linha CSV. """
@@ -69,6 +79,28 @@ class Habito:
         self.contador_execucoes = contador_execucoes
         self.data_criacao = data_criacao
         self.data_ultima_execucao = data_ultima_execucao
+
+    @property
+    def nome(self):
+        return self._nome
+    
+    @nome.setter
+    def nome(self, valor):
+        """ Define o nome, rejeita nomes vazios. """
+        if not valor or not isinstance(valor,str) or not valor.strip():
+            raise ValueError("O nome do hábito não pode ser vazio.")
+        self._nome = valor
+
+    @property
+    def frequencia(self):
+        return self._frequencia
+    
+    @frequencia.setter
+    def frequencia(self, valor):
+        """ Define a frequência, rejeita frequências vazias. """
+        if not valor or not isinstance(valor,str) or not valor.strip():
+            raise ValueError("A frequência do hábito não pode ser vazia.")
+        self._frequencia = valor    
 
     @classmethod
     def from_csv(cls, linha):
