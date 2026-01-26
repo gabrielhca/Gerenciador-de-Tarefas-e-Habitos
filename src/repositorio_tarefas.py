@@ -27,32 +27,13 @@ class RepositorioTarefas():
 
     def carrega_dados_csv(self):
         """ Lê os dados do arquivo CSV e popula a lista de tarefas. """
-
         try:
             with open(self.ARQUIVO_CSV, mode="r", encoding='utf-8') as arquivo:
                 next(arquivo)
                 for linha in arquivo:
-                    partes = linha.strip().split(",")
-                    tarefa_id = int(partes[0])
-                    if self.ultimo_id < tarefa_id:
-                        self.ultimo_id = tarefa_id
-                    titulo = partes[1]
-                    descricao = partes[2]
-                    data_limite = formatar_data(partes[3])
-                    status_conclusao = partes[4].lower()
-
-                    # Protege contra IndexError
-                    if len(partes) > 5 and partes[5]:
-                        data_criacao = formatar_data(partes[5])
-                    else:
-                        data_criacao = date.today()
-                    if len(partes) > 6 and partes[6]:
-                        data_conclusao = formatar_data(partes[6])
-                    else:
-                        data_conclusao = None
-
-                    nova_tarefa = Tarefa(
-                        tarefa_id, titulo, descricao, data_limite, status_conclusao == "true", data_criacao, data_conclusao)
+                    nova_tarefa = Tarefa.from_csv(linha)
+                    if self.ultimo_id < nova_tarefa.id:
+                        self.ultimo_id = nova_tarefa.id
                     self.lista_tarefas.append(nova_tarefa)
         except FileNotFoundError:
             self.arquivo_existe()

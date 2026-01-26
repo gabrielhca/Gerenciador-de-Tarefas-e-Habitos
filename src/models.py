@@ -1,7 +1,7 @@
 """ Estrutura de dados das tarefas e hábitos. """
 
-from src.utils import formatar_data_para_string
-
+from src.utils import formatar_data_para_string, formatar_data
+from datetime import date
 
 class Tarefa:
     """ Constrói uma tarefa com título, descrição, data limite e status de conclusão. """
@@ -16,9 +16,33 @@ class Tarefa:
         self.data_criacao = data_criacao
         self.data_conclusao = data_conclusao
 
-    def __eq__(self, valor):
-        if isinstance(valor, Tarefa):
-            return self.id == valor.id
+    @classmethod
+    def from_csv(cls, linha):
+        """ Cria uma instância de Tarefa a partir de uma linha CSV. """
+        
+        partes = linha.strip().split(",")
+        tarefa_id = int(partes[0])
+        
+        titulo = partes[1]
+        descricao = partes[2]
+        data_limite = formatar_data(partes[3])
+        status_conclusao = partes[4].lower() == "true"
+
+        # Protege contra IndexError
+        if len(partes) > 5 and partes[5]:
+            data_criacao = formatar_data(partes[5])
+        else:
+            data_criacao = date.today()
+        if len(partes) > 6 and partes[6]:
+            data_conclusao = formatar_data(partes[6])
+        else:
+            data_conclusao = None
+
+        return cls(tarefa_id, titulo, descricao, data_limite, status_conclusao, data_criacao, data_conclusao)
+
+    def __eq__(self, outro):
+        if isinstance(outro, Tarefa):
+            return self.id == outro.id
         return False
     
     def __hash__(self):
@@ -45,9 +69,33 @@ class Habito:
         self.data_criacao = data_criacao
         self.data_ultima_execucao = data_ultima_execucao
 
-    def __eq__(self, valor):
-        if isinstance(valor, Habito):
-            return self.id == valor.id
+    @classmethod
+    def from_csv(cls, linha):
+        """ Cria uma instância de Habito a partir de uma linha CSV. """
+        
+        partes = linha.strip().split(",")
+        habito_id = int(partes[0])
+
+        nome = partes[1]
+        frequencia = partes[2]
+        contador_execucoes = int(partes[3])
+
+        # Protege contra IndexError
+        if len(partes) > 4 and partes[4]:
+            data_criacao = formatar_data(partes[4])
+        else:
+            data_criacao = date.today()
+        if len(partes) > 5 and partes[5]:
+            data_ultima_execucao = formatar_data(partes[5])
+        else:
+            data_ultima_execucao = None
+            
+        return cls(habito_id, nome, frequencia, contador_execucoes, data_criacao, data_ultima_execucao)
+        
+
+    def __eq__(self, outro):
+        if isinstance(outro, Habito):
+            return self.id == outro.id
         return False
     
     def __hash__(self):
