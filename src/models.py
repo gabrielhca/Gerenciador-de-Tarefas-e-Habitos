@@ -1,7 +1,7 @@
 """ Estrutura de dados das tarefas e hábitos. """
 
 from src.utils import formatar_data_para_string, formatar_data
-from datetime import date
+from datetime import date, timedelta
 
 
 class Tarefa:
@@ -40,14 +40,16 @@ class Tarefa:
         status_conclusao = partes[4] == "1"
 
         # Protege contra IndexError
-        if len(partes) > 5 and partes[5]:
-            data_criacao = formatar_data(partes[5])
-        else:
-            data_criacao = date.today()
+        data_conclusao = None
         if len(partes) > 6 and partes[6]:
             data_conclusao = formatar_data(partes[6])
-        else:
-            data_conclusao = None
+
+        data_criacao = None
+        if len(partes) > 5 and partes[5]:
+            data_criacao = formatar_data(partes[5])
+        
+        if not data_criacao:
+            data_criacao = data_conclusao if data_conclusao else date.today()
 
         return cls(tarefa_id, titulo, descricao, data_limite, status_conclusao, data_criacao, data_conclusao)
 
@@ -117,12 +119,16 @@ class Habito:
         except ValueError:
             contador_execucoes = 0
 
-
         # Protege contra IndexError
+        data_criacao = None
         if len(partes) > 4 and partes[4]:
             data_criacao = formatar_data(partes[4])
-        else:
-            data_criacao = date.today()
+        if not data_criacao:
+            if contador_execucoes > 0:
+                data_criacao = date.today() - timedelta(days=contador_execucoes)
+            else:
+                data_criacao = date.today()
+
         if len(partes) > 5 and partes[5]:
             data_ultima_execucao = formatar_data(partes[5])
         else:
