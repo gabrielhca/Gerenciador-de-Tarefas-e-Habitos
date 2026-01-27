@@ -31,7 +31,7 @@ class Tarefa:
     def from_csv(cls, linha):
         """ Cria uma instância de Tarefa a partir de uma linha CSV. """
 
-        partes = linha.strip().split(",")
+        partes = linha.strip().split(";")
         tarefa_id = int(partes[0])
 
         titulo = partes[1]
@@ -108,7 +108,7 @@ class Habito:
     def from_csv(cls, linha):
         """ Cria uma instância de Habito a partir de uma linha CSV. """
 
-        partes = linha.strip().split(",")
+        partes = linha.strip().split(";")
         habito_id = int(partes[0])
 
         nome = partes[1]

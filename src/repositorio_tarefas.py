@@ -23,7 +23,7 @@ class RepositorioTarefas():
         with open(self.ARQUIVO_CSV, mode="a", newline="", encoding="utf-8") as arquivo:
             if not arquivo_existe:
                 arquivo.write(
-                    "id,titulo,descricao,data_limite,concluida,data_criacao,data_conclusao\n")
+                    "id;titulo;descricao;data_limite;concluida;data_criacao;data_conclusao\n")
 
     def carrega_dados_csv(self):
         """ Lê os dados do arquivo CSV e popula a lista de tarefas. """
@@ -54,7 +54,7 @@ class RepositorioTarefas():
             self.ultimo_id += 1
             concluida_str = "1" if concluida else "0"
             arquivo.write(
-                f"{self.ultimo_id},{titulo},{descricao},{data_limite_str},{concluida_str},{data_criacao_str},{data_conclusao_str}\n")
+                f"{self.ultimo_id};{titulo};{descricao};{data_limite_str};{concluida_str};{data_criacao_str};{data_conclusao_str}\n")
             nova_tarefa = Tarefa(
                 self.ultimo_id,
                 titulo,
@@ -70,7 +70,7 @@ class RepositorioTarefas():
         """ Reescreve o CSV inteiro com o estado atual das tarefas, garantindo a integridade dos dados. """
         with open(self.ARQUIVO_CSV, mode="w", newline="", encoding="utf-8") as arquivo:
             arquivo.write(
-                "id,titulo,descricao,data_limite,concluida,data_criacao,data_conclusao\n")
+                "id;titulo;descricao;data_limite;concluida;data_criacao;data_conclusao\n")
             for tarefa in self.lista_tarefas:
 
                 data_limite_str = formatar_data_para_string(tarefa.data_limite)
@@ -80,7 +80,7 @@ class RepositorioTarefas():
                     tarefa.data_conclusao) if tarefa.data_conclusao else ""
                 concluida_str = "1" if tarefa.concluida else "0"
                 arquivo.write(
-                    f"{tarefa.id},{tarefa.titulo},{tarefa.descricao},{data_limite_str},{concluida_str},{data_criacao_str},{data_conclusao_str}\n")
+                    f"{tarefa.id};{tarefa.titulo};{tarefa.descricao};{data_limite_str};{concluida_str};{data_criacao_str};{data_conclusao_str}\n")
 
     def marcar_tarefa_concluida(self, tarefa_id):
         """ Marca uma tarefa como concluída. """

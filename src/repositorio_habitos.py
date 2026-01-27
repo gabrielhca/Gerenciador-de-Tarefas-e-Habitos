@@ -23,7 +23,7 @@ class RepositorioHabitos():
         with open(self.ARQUIVO_CSV, mode="a", newline="", encoding="utf-8") as arquivo:
             if not arquivo_existe:
                 arquivo.write(
-                    "id,nome,frequencia,contador_execucoes,data_criacao,data_ultima_execucao\n")
+                    "id;nome;frequencia;contador_execucoes;data_criacao;data_ultima_execucao\n")
 
     def carrega_dados_csv(self):
         """ Lê os dados do arquivo CSV e popula a lista de hábitos. """
@@ -50,7 +50,7 @@ class RepositorioHabitos():
         with open(self.ARQUIVO_CSV, mode="a", newline="", encoding="utf-8") as arquivo:
             self.ultimo_id += 1
             arquivo.write(
-                f"{self.ultimo_id},{nome},{frequencia},{contador_execucoes},{data_criacao_str},{data_ultima_execucao_str}\n")
+                f"{self.ultimo_id};{nome};{frequencia};{contador_execucoes};{data_criacao_str};{data_ultima_execucao_str}\n")
             novo_habito = Habito(self.ultimo_id, nome,
                                  frequencia, contador_execucoes, data_criacao, data_ultima_execucao)
             self.lista_habitos.append(novo_habito)
@@ -59,7 +59,7 @@ class RepositorioHabitos():
         """ Reescreve o CSV inteiro com o estado atual dos hábitos, garantindo a integridade dos dados. """
         with open(self.ARQUIVO_CSV, mode="w", newline="", encoding="utf-8") as arquivo:
             arquivo.write(
-                "id,nome,frequencia,contador_execucoes,data_criacao,data_ultima_execucao\n")
+                "id;nome;frequencia;contador_execucoes;data_criacao;data_ultima_execucao\n")
             for habito in self.lista_habitos:
                 data_criacao_str = formatar_data_para_string(
                     habito.data_criacao)
@@ -67,7 +67,7 @@ class RepositorioHabitos():
                     habito.data_ultima_execucao) if habito.data_ultima_execucao else ""
 
                 arquivo.write(
-                    f"{habito.id},{habito.nome},{habito.frequencia},{habito.contador_execucoes},{data_criacao_str},{data_ultima_execucao_str}\n")
+                    f"{habito.id};{habito.nome};{habito.frequencia};{habito.contador_execucoes};{data_criacao_str};{data_ultima_execucao_str}\n")
 
     def registrar_execucao_habito(self, habito_id):
         """ Registra a execução de um hábito, incrementando seu contador."""
