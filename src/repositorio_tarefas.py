@@ -111,3 +111,8 @@ class RepositorioTarefas():
                     tarefa.data_limite = formatar_data(data_limite)
                 self.salvar_arquivo_completo()
                 return tarefa
+
+    def buscar_por_texto(self, termo):
+        """ Filtra as tarefas que contém o termo no título ou descrição. """
+        termo = termo.lower()
+        return [t for t in self.lista_tarefas if termo in t.titulo.lower() or termo in t.descricao.lower()]

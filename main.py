@@ -8,6 +8,7 @@ from src.views import (
     preencher_dados_habito,
     editar_dados_tarefa,
     editar_dados_habito,
+    solicitar_termo_busca,
     solicitar_id,
     exibir_relatorio_tarefas,
     exibir_relatorio_habitos,
@@ -38,21 +39,36 @@ def gerenciar_tarefas(repositorio):
         dados = preencher_dados_tarefa()
         repositorio.salvar_dados_csv(dados[0], dados[1], dados[2])
     elif opcao == '2':
-        id_tarefa = solicitar_id(repositorio.lista_tarefas, "tarefas")
-        if id_tarefa:
-            novos_dados = editar_dados_tarefa(id_tarefa)
+        termo = solicitar_termo_busca()
+        if termo == '0':
+            return
+        resultados = repositorio.buscar_por_texto(termo)
+        exibir_dados(resultados, "tarefas")
+        tarefa_selecionada = solicitar_id(resultados)
+        if tarefa_selecionada:
+            novos_dados = editar_dados_tarefa(tarefa_selecionada)
             repositorio.editar_tarefa(
-                id_tarefa.id, novos_dados[0], novos_dados[1], novos_dados[2])
+                tarefa_selecionada.id, novos_dados[0], novos_dados[1], novos_dados[2])
             print("Tarefa atualizada!")
     elif opcao == '3':
-        id_tarefa = solicitar_id(repositorio.lista_tarefas, "tarefas")
-        if id_tarefa:
-            tarefa_alterada = repositorio.marcar_tarefa_concluida(id_tarefa.id)
+        termo = solicitar_termo_busca()
+        if termo == '0':
+            return
+        resultados = repositorio.buscar_por_texto(termo)
+        exibir_dados(resultados, "tarefas")
+        tarefa_selecionada = solicitar_id(resultados)
+        if tarefa_selecionada:
+            tarefa_alterada = repositorio.marcar_tarefa_concluida(tarefa_selecionada.id)
             print(f"Tarefa '{tarefa_alterada.titulo}' marcada como concluída!")
     elif opcao == '4':
-        id_tarefa = solicitar_id(repositorio.lista_tarefas, "tarefas")
-        if id_tarefa:
-            tarefa_removida = repositorio.excluir_tarefa(id_tarefa.id)
+        termo = solicitar_termo_busca()
+        if termo == '0':
+            return
+        resultados = repositorio.buscar_por_texto(termo)
+        exibir_dados(resultados, "tarefas")
+        tarefa_selecionada = solicitar_id(resultados)
+        if tarefa_selecionada:
+            tarefa_removida = repositorio.excluir_tarefa(tarefa_selecionada.id)
             print(f"Tarefa '{tarefa_removida.titulo}' excluída!")
     elif opcao == '5':
         return
@@ -109,23 +125,38 @@ def gerenciar_habitos(repositorio):
         dados = preencher_dados_habito()
         repositorio.salvar_dados_csv(dados[0], dados[1], dados[2])
     elif opcao == '2':
-        id_habito = solicitar_id(repositorio.lista_habitos, "hábitos")
-        if id_habito:
-            novos_dados = editar_dados_habito(id_habito)
+        termo = solicitar_termo_busca()
+        if termo == '0':
+            return
+        resultados = repositorio.buscar_por_texto(termo)
+        exibir_dados(resultados, "hábitos")
+        habito_selecionado = solicitar_id(resultados)
+        if habito_selecionado:
+            novos_dados = editar_dados_habito(habito_selecionado)
             repositorio.editar_habito(
-                id_habito.id, novos_dados[0], novos_dados[1])
+                habito_selecionado.id, novos_dados[0], novos_dados[1])
             print("Hábito atualizado!")
     elif opcao == '3':
-        id_habito = solicitar_id(repositorio.lista_habitos, "hábitos")
-        if id_habito:
+        termo = solicitar_termo_busca()
+        if termo == '0':
+            return
+        resultados = repositorio.buscar_por_texto(termo)
+        exibir_dados(resultados, "hábitos")
+        habito_selecionado = solicitar_id(resultados)
+        if habito_selecionado:
             habito_alterado = repositorio.registrar_execucao_habito(
-                id_habito.id)
+                habito_selecionado.id)
             print(
                 f"Hábito '{habito_alterado[0]}' executado! Total de execuções: {habito_alterado[1]}")
     elif opcao == '4':
-        id_habito = solicitar_id(repositorio.lista_habitos, "hábitos")
-        if id_habito:
-            habito_removido = repositorio.excluir_habito(id_habito.id)
+        termo = solicitar_termo_busca()
+        if termo == '0':
+            return
+        resultados = repositorio.buscar_por_texto(termo)
+        exibir_dados(resultados, "hábitos")
+        habito_selecionado = solicitar_id(resultados)
+        if habito_selecionado:
+            habito_removido = repositorio.excluir_habito(habito_selecionado.id)
             print(f"Hábito '{habito_removido.nome}' excluído!")
     elif opcao == '5':
         return

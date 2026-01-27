@@ -64,9 +64,12 @@ def preencher_dados_habito():
     return nome, frequencia, contador_execucoes
 
 
-def solicitar_id(dados, tipo):
+def solicitar_termo_busca():
+    """ Solicita ao usuário um termo para pesquisa. """
+    return input("Informe o termo de busca (ou '0' para voltar):").strip()
+
+def solicitar_id(dados):
     """ Solicita ao usuário um ID válido de tarefa ou hábito. """
-    exibir_dados(dados, tipo)
     if not dados:
         return None
 

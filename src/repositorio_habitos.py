@@ -96,3 +96,8 @@ class RepositorioHabitos():
                     habito.frequencia = frequencia
                 self.salvar_arquivo_completo()
                 return habito
+
+    def buscar_por_texto(self, termo):
+        """ Filtra os habitos que contém o termo no nome. """
+        termo = termo.lower()
+        return [h for h in self.lista_habitos if termo in h.nome.lower()]
