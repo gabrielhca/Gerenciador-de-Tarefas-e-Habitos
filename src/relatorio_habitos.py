@@ -106,7 +106,7 @@ def gerar_desempenho_habitos(lista_habitos):
     if consistencia_media >= 80:
         diagnostico = "Excelente: Voce mantém uma rotina disciplinada."
     elif quantidade_congelados > total / 2:
-        diagnostico = "Crítico: A maioria dos seus hábitos foi abandonada."
+        diagnostico = "Crítico: A maioria dos seus hábitos foi abandonado."
     elif quantidade_em_chamas > 0:
         diagnostico = "Bom: Você está ativo hoje, continue assim."
     else:

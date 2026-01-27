@@ -1,6 +1,6 @@
 """ Módulo responsável pela interface de usuário (visualizações) para tarefas e hábitos. """
 
-from src.utils import formatar_data, formatar_data_para_string
+from src.utils import formatar_data, formatar_data_para_string, exportar_relatorio
 from src.relatorio_habitos import verificar_status_habito
 
 
@@ -84,59 +84,75 @@ def solicitar_id(dados, tipo):
         except ValueError:
             print("Por favor, insira um número válido.")
 
+def formatar_relatorio_tarefas(relatorio):
+    """ Gera uma string formatada com os dados do relatório de tarefas. """
+
+    if not relatorio:
+        return "Nenhum dado de relatório disponível."
+    
+    m = relatorio["metricas"]
+    linhas = []
+    linhas.append("=== RELATÓRIO DE TAREFAS ===\n")
+    linhas.append(f"Total: {m['total_tarefas']}")
+    linhas.append(f"Concluídas: {m['tarefas_concluidas']} ({m['taxa_conclusao_percentual']:.2f}%)")
+    linhas.append(f"Pendentes: {m['tarefas_pendentes']}")
+    linhas.append(f"Atrasadas: {m['tarefas_atrasadas']}")
+    linhas.append(f"Pontualidade: {m['taxa_pontualidade_percentual']:.2f}%")
+    
+    linhas.append("\nPor Categorias:")
+    for categoria, lista_tarefas in relatorio["prazos"].items():
+        linhas.append(f"- {categoria}: {len(lista_tarefas)} tarefas")
+    
+    linhas.append("\nDiagnóstico:")
+    linhas.append(relatorio["diagnostico"])
+    
+    return "\n".join(linhas)
+
 
 def exibir_relatorio_tarefas(relatorio):
-    """ Exibe o relatório de desempenho das tarefas. """
+    """ Exibe o relatório e pergunta se deseja salvar. """
+
+    texto_relatorio = formatar_relatorio_tarefas(relatorio)
+    print(texto_relatorio)
+    salvar = input("\nDeseja exportar este relatório? (s/n): ").lower()
+    if salvar == "s":
+        exportar_relatorio(texto_relatorio, "relatorio_tarefas.txt")
+
+def formatar_relatorio_habitos(relatorio):
+    """ Gera uma string formatada com os dados do relatório de hábitos. """
 
     if not relatorio:
-        print("Nenhum dado de relatório disponível.")
-        return
-
+        return "Nenhum dado de relatório disponível."
+    
     m = relatorio["metricas"]
-
-    print("\n=== RELATORIO DE TAREFAS ===")
-    print(f"Total: {m['total_tarefas']}")
-    print(
-        f"Concluídas: {m['tarefas_concluidas']} ({m['taxa_conclusao_percentual']:.2f}%)")
-    print(f"Pendentes: {m['tarefas_pendentes']}")
-    print(f"Atrasadas: {m['tarefas_atrasadas']}")
-    print(f"Pontualidade: {m['taxa_pontualidade_percentual']:.2f}%")
-
-    print("\nPor Categorias:")
-    prazos = relatorio["prazos"]
-    for categoria, lista_tarefas in prazos.items():
-        print(f"- {categoria}: {len(lista_tarefas)} tarefas")
-
-    print("\nDiagnóstico:")
-    print(relatorio["diagnostico"])
-
+    linhas = []
+    linhas.append("=== RELATÓRIO DE HABITOS ===\n")
+    linhas.append(f"Total: {m['total_habitos']}")
+    linhas.append(f"Em chamas: {m['habitos_em_chamas']} (Ativos)")
+    linhas.append(f"Congelados: {m['habitos_congelados']} (Inativos)")
+    linhas.append(f"Consistência Média: {m['consistencia_media']:.2f}%")
+    
+    linhas.append("\nDetalhes por Hábito:")
+    for detalhe in relatorio["detalhes"]:
+        linhas.append(f"- {detalhe['nome']}: {detalhe['status']} | "
+                      f"Execuções: {detalhe['execucoes_reais']}/{detalhe['execucoes_esperadas']} | "
+                      f"Consistência: {detalhe['consistencia']:.2f}% | "
+        )
+    
+    linhas.append("\nDiagnóstico:")
+    linhas.append(relatorio["diagnostico"])
+    
+    return "\n".join(linhas)
 
 def exibir_relatorio_habitos(relatorio):
-    """ Exibe o relatório de desempenho dos hábitos. """
+    """" Exibe o relatório e pergunta se deseja salvar. """
 
-    if not relatorio:
-        print("Nenhum dado de relatório disponível.")
-        return
+    texto_relatorio = formatar_relatorio_habitos(relatorio)
+    print(texto_relatorio)
 
-    m = relatorio["metricas"]
-
-    print("\n=== RELATORIO DE HABITOS ===")
-    print(f"Total: {m['total_habitos']}")
-    print(f"Em chamas: {m['habitos_em_chamas']} (Ativos)")
-    print(f"Congelados: {m['habitos_congelados']} (Inativos)")
-    print(f"Consistência Média: {m['consistencia_media']:.2f}%")
-
-    print("\nDetalhes por Hábito:")
-    for detalhe in relatorio["detalhes"]:
-        print(
-            f"- {detalhe['nome']}: {detalhe['status']} | "
-            f"Execuções: {detalhe['execucoes_reais']}/{detalhe['execucoes_esperadas']} | "
-            f"Consistência: {detalhe['consistencia']:.2f}% | "
-            f"Dias sem fazer: {detalhe['dias_sem_fazer']}"
-        )
-
-    print("\nDiagnóstico:")
-    print(relatorio["diagnostico"])
+    salvar = input("\nDeseja exportar este relatório? (s/n): ").lower()
+    if salvar == "s":
+        exportar_relatorio(texto_relatorio, "relatorio_habitos.txt")
 
 
 def exibir_status_habitos(lista_habitos):

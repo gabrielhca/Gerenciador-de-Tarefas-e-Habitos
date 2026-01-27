@@ -66,8 +66,10 @@ def calcular_pontualidade(lista_tarefas):
         return 0.0
 
     concluidas = filtrar_tarefas_concluidas(lista_tarefas)
+    atrasadas = filtrar_tarefas_atrasadas(lista_tarefas)
+    total_avaliado = len(concluidas) + len(atrasadas)
 
-    if not concluidas:
+    if total_avaliado == 0:
         return 0.0
 
     no_prazo = 0
@@ -75,7 +77,7 @@ def calcular_pontualidade(lista_tarefas):
         if tarefa.data_conclusao and tarefa.data_conclusao <= tarefa.data_limite:
             no_prazo += 1
 
-    return (no_prazo / len(concluidas)) * 100
+    return (no_prazo / total_avaliado) * 100
 
 
 def obter_diagnostico_tarefas(prazos, taxa_conclusao):
@@ -85,7 +87,7 @@ def obter_diagnostico_tarefas(prazos, taxa_conclusao):
     quantidade_urgentes = len(prazos["Urgentes"])
 
     if quantidade_atrasadas > 0:
-        return f"Critico: Você tem {quantidade_atrasadas} tarefas atrasadas. Priorize-as imediatamente."
+        resultado = f"Critico: Você tem {quantidade_atrasadas} tarefas atrasadas. Priorize-as imediatamente."
     elif quantidade_urgentes > 0:
         return f"Atenção: Você tem {quantidade_urgentes} tarefas urgentes. Foque nelas em breve."
     elif taxa_conclusao == 100:
