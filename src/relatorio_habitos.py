@@ -2,6 +2,8 @@
 
 from datetime import date
 
+STATUS_ATIVO = "Em chamas"
+STATUS_INATIVO = "Congelado"
 
 def calcular_execucoes_esperadas(habito):
     """ Calcula o número de execuções esperadas desde a criação do hábito. """
@@ -47,22 +49,22 @@ def verificar_status_habito(habito):
     # Lógica para hábitos diários
     if "diaria" in habito.frequencia.lower():
         if dias_sem_fazer == 0:
-            status = "Em chamas"
+            status = STATUS_ATIVO
         elif dias_sem_fazer == 1:
             status = "Em dia"
         elif dias_sem_fazer <= 3:
             status = "Atenção"
         else:
-            status = "Congelado"
+            status = STATUS_INATIVO
 
     # Lógica para hábitos semanais
     elif "semanal" in habito.frequencia.lower():
         if dias_sem_fazer <= 7:
-            status = "Em chamas"
+            status = STATUS_ATIVO
         elif dias_sem_fazer <= 14:
             status = "Atenção"
         else:
-            status = "Congelado"
+            status = STATUS_INATIVO
     return status, dias_sem_fazer
 
 
@@ -83,9 +85,9 @@ def gerar_desempenho_habitos(lista_habitos):
         status, dias_sem_fazer = verificar_status_habito(habito)
 
         soma_consistencia += consistencia
-        if status == "Em chamas":
+        if status == STATUS_ATIVO:
             quantidade_em_chamas += 1
-        elif status == "Congelado":
+        elif status == STATUS_INATIVO:
             quantidade_congelados += 1
 
         dados = {
