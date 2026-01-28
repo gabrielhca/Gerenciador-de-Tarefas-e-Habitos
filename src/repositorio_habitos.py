@@ -40,14 +40,13 @@ class RepositorioHabitos():
         except FileNotFoundError:
             self.arquivo_existe()
 
-    def salvar_dados_csv(self, nome, frequencia, contador_execucoes):
+    def salvar_dados_csv(self, nome, frequencia, contador_execucoes, data_ultima_execucao=None):
         """ Adiciona um novo hábito ao arquivo CSV. """
         self.arquivo_existe()
 
         data_criacao = date.today()
         data_criacao_str = formatar_data_para_string(data_criacao)
-        data_ultima_execucao = None
-        data_ultima_execucao_str = ""
+        data_ultima_execucao_str = formatar_data_para_string(data_ultima_execucao)
 
         with open(self.ARQUIVO_CSV, mode="a", newline="", encoding="utf-8") as arquivo:
             self.ultimo_id += 1

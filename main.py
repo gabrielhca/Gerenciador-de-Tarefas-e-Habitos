@@ -123,7 +123,7 @@ def gerenciar_habitos(repositorio):
 
     if opcao == '1':
         dados = preencher_dados_habito()
-        repositorio.salvar_dados_csv(dados[0], dados[1], dados[2])
+        repositorio.salvar_dados_csv(dados[0], dados[1], dados[2], dados[3])
     elif opcao == '2':
         termo = solicitar_termo_busca()
         if termo == '0':

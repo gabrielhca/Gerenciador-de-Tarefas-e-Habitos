@@ -60,8 +60,24 @@ def preencher_dados_habito():
     """ Solicita ao usuário os dados para criar um novo hábito. """
     nome = input("Nome do hábito: ")
     frequencia = input("Frequência (diária, semanal, mensal): ")
-    contador_execucoes = int(input("Contador de execuções inicial: "))
-    return nome, frequencia, contador_execucoes
+    
+    while True:
+        try:
+            contador_execucoes = int(input("Contador de execuções inicial: "))
+            break
+        except ValueError:
+            print("Por favor, insira um número válido para o contador de execuções.")
+
+    data_ultima = None
+    if contador_execucoes > 0:
+        print("Como você já executou esse hábito, informe a data da última execução.")
+        while True:
+            data_str = input("Data da última execução (DD-MM-AAAA): ")
+            data_ultima = formatar_data(data_str)
+            if data_ultima:
+                break
+
+    return nome, frequencia, contador_execucoes, data_ultima
 
 
 def solicitar_termo_busca():
