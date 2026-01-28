@@ -87,7 +87,7 @@ def obter_diagnostico_tarefas(prazos, taxa_conclusao):
     quantidade_urgentes = len(prazos["Urgentes"])
 
     if quantidade_atrasadas > 0:
-        resultado = f"Critico: Você tem {quantidade_atrasadas} tarefas atrasadas. Priorize-as imediatamente."
+        return f"Critico: Você tem {quantidade_atrasadas} tarefas atrasadas. Priorize-as imediatamente."
     elif quantidade_urgentes > 0:
         return f"Atenção: Você tem {quantidade_urgentes} tarefas urgentes. Foque nelas em breve."
     elif taxa_conclusao == 100:
