@@ -31,6 +31,8 @@ class RepositorioTarefas():
             with open(self.ARQUIVO_CSV, mode="r", encoding='utf-8') as arquivo:
                 next(arquivo)
                 for linha in arquivo:
+                    if not linha.strip():
+                        continue
                     nova_tarefa = Tarefa.from_csv(linha)
                     if self.ultimo_id < nova_tarefa.id:
                         self.ultimo_id = nova_tarefa.id

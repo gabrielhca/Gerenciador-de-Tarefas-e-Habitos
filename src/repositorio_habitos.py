@@ -31,6 +31,8 @@ class RepositorioHabitos():
             with open(self.ARQUIVO_CSV, mode="r", encoding='utf-8') as arquivo:
                 next(arquivo)
                 for linha in arquivo:
+                    if not linha.strip():
+                        continue
                     novo_habito = Habito.from_csv(linha)
                     if self.ultimo_id < novo_habito.id:
                         self.ultimo_id = novo_habito.id
