@@ -59,7 +59,7 @@ def editar_dados_habito(habito):
 def preencher_dados_habito():
     """ Solicita ao usuário os dados para criar um novo hábito. """
     nome = input("Nome do hábito: ")
-    frequencia = input("Frequência (diária, semanal, mensal): ")
+    frequencia = input("Frequência (diario, semanal): ")
     
     while True:
         try:
@@ -118,9 +118,15 @@ def formatar_relatorio_tarefas(relatorio):
     linhas.append(f"Atrasadas: {m['tarefas_atrasadas']}")
     linhas.append(f"Pontualidade: {m['taxa_pontualidade_percentual']:.2f}%")
     
-    linhas.append("\nPor Categorias:")
+    linhas.append("\n--- Detalhes por Categoria ---")
     for categoria, lista_tarefas in relatorio["prazos"].items():
         linhas.append(f"- {categoria}: {len(lista_tarefas)} tarefas")
+        if not lista_tarefas:
+            linhas.append("  (Nenhuma tarefa nesta categoria)")
+        else:
+            for t in lista_tarefas:
+                data_str = formatar_data_para_string(t.data_limite)
+                linhas.append(f"  [ID {t.id}] {t.titulo} - Vence: {data_str}")
     
     linhas.append("\nDiagnóstico:")
     linhas.append(relatorio["diagnostico"])
@@ -151,12 +157,13 @@ def formatar_relatorio_habitos(relatorio):
     linhas.append(f"Congelados: {m['habitos_congelados']} (Inativos)")
     linhas.append(f"Consistência Média: {m['consistencia_media']:.2f}%")
     
-    linhas.append("\nDetalhes por Hábito:")
-    for detalhe in relatorio["detalhes"]:
-        linhas.append(f"- {detalhe['nome']}: {detalhe['status']} | "
-                      f"Execuções: {detalhe['execucoes_reais']}/{detalhe['execucoes_esperadas']} | "
-                      f"Consistência: {detalhe['consistencia']:.2f}% | "
-        )
+    linhas.append("\n--- Status dos Hábitos ---")
+    for status, lista_dados in relatorio["detalhes"].items():
+        if lista_dados:
+            linhas.append(f"\n[{status.upper()}]")
+            for d in lista_dados:
+                linhas.append(f"  - {d['nome']}: {d['consistencia']:.2f}% consistência"
+                              f"({d['execucoes_reais']}/{d['execucoes_esperadas']} execuções)")
     
     linhas.append("\nDiagnóstico:")
     linhas.append(relatorio["diagnostico"])

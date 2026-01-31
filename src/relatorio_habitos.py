@@ -16,7 +16,7 @@ def calcular_execucoes_esperadas(habito):
     if dias_desde_criacao < 0:
         dias_desde_criacao = 0
 
-    if "diaria" in habito.frequencia.lower():
+    if "diario" in habito.frequencia.lower():
         return dias_desde_criacao + 1
     elif "semanal" in habito.frequencia.lower():
         return (dias_desde_criacao // 7) + 1
@@ -47,7 +47,7 @@ def verificar_status_habito(habito):
     status = "Indefinido"
 
     # Lógica para hábitos diários
-    if "diaria" in habito.frequencia.lower():
+    if "diario" in habito.frequencia.lower():
         if dias_sem_fazer == 0:
             status = STATUS_ATIVO
         elif dias_sem_fazer == 1:
@@ -74,7 +74,15 @@ def gerar_desempenho_habitos(lista_habitos):
     if not lista_habitos:
         return None
 
-    detalhes = []
+    detalhes = {
+        STATUS_ATIVO: [],
+        "Em dia": [],
+        "Atenção": [],
+        STATUS_INATIVO: [],
+        "Indefinido": [],
+        "Nunca realizado": []
+    }
+
     soma_consistencia = 0
     quantidade_em_chamas = 0
     quantidade_congelados = 0
@@ -96,11 +104,12 @@ def gerar_desempenho_habitos(lista_habitos):
             "execucoes_reais": habito.contador_execucoes,
             "execucoes_esperadas": esperadas,
             "consistencia": consistencia,
-            "status": status,
             "dias_sem_fazer": dias_sem_fazer
         }
-
-        detalhes.append(dados)
+        if status in detalhes:
+            detalhes[status].append(dados)
+        else:
+            detalhes["Indefinido"].append(dados)
 
     total = len(lista_habitos)
     consistencia_media = soma_consistencia / total if total > 0 else 0
