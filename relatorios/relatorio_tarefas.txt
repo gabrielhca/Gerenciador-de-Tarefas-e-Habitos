@@ -1,0 +1,26 @@
+=== RELATÓRIO DE TAREFAS ===
+
+Total: 9
+Concluídas: 0 (0.00%)
+Pendentes: 9
+Atrasadas: 0
+Pontualidade: 0.00%
+
+--- Detalhes por Categoria ---
+- Atrasadas: 0 tarefas
+  (Nenhuma tarefa nesta categoria)
+- Urgentes: 1 tarefas
+  [ID 7] Fazer compras da semana - Vence: 08-02-2026
+- Próximas: 3 tarefas
+  [ID 5] Comprar suplementos - Vence: 10-02-2026
+  [ID 6] Agendar nutricionista - Vence: 12-02-2026
+  [ID 8] Pagar internet - Vence: 10-02-2026
+- Futuras: 5 tarefas
+  [ID 1] Prova de Automatos - Vence: 20-02-2026
+  [ID 2] Trabalho de Algoritmos - Vence: 28-02-2026
+  [ID 3] Estudar Prolog - Vence: 15-02-2026
+  [ID 4] Trabalho de Empreendedorismo - Vence: 25-02-2026
+  [ID 9] Levar cachorro no vet - Vence: 15-02-2026
+
+Diagnóstico:
+Atenção: Você tem 1 tarefas urgentes. Foque nelas em breve.

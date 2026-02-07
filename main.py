@@ -1,18 +1,27 @@
 """ Módulo principal da aplicação. """
 
+from src.repositorio_projetos import RepositorioProjetos
 from src.repositorio_tarefas import RepositorioTarefas
 from src.repositorio_habitos import RepositorioHabitos
 from src.views import (
     exibir_dados,
     preencher_dados_tarefa,
     preencher_dados_habito,
+    preencher_dados_projeto,
     editar_dados_tarefa,
     editar_dados_habito,
+    editar_dados_projeto,
     solicitar_termo_busca,
     solicitar_id,
     exibir_relatorio_tarefas,
     exibir_relatorio_habitos,
-    exibir_status_habitos
+    exibir_status_habitos,
+    exibir_relatorio_projeto,
+    exibir_relatorio_geral_projetos
+)
+from src.relatorio_projetos import (
+    gerar_dados_projeto,
+    gerar_desempenho_geral_projetos
 )
 from src.relatorio_tarefas import (
     gerar_desempenho_tarefas,
@@ -23,7 +32,7 @@ from src.relatorio_tarefas import (
 from src.relatorio_habitos import gerar_desempenho_habitos
 
 
-def gerenciar_tarefas(repositorio):
+def gerenciar_tarefas(repositorio, repo_projetos):
     """Exibe o sub-menu de gerenciamento de tarefas."""
 
     print("\n-- Gerenciar Tarefas --")
@@ -36,8 +45,8 @@ def gerenciar_tarefas(repositorio):
     opcao = input("Escolha uma opção: ")
 
     if opcao == '1':
-        dados = preencher_dados_tarefa()
-        repositorio.salvar_dados_csv(dados[0], dados[1], dados[2])
+        dados = preencher_dados_tarefa(repo_projetos)
+        repositorio.salvar_dados_csv(dados[0], dados[1], dados[2], dados[3])
     elif opcao == '2':
         termo = solicitar_termo_busca()
         if termo == '0':
@@ -109,7 +118,7 @@ def relatorios_tarefas(repositorio):
         print("Opção inválida.")
 
 
-def gerenciar_habitos(repositorio):
+def gerenciar_habitos(repositorio, repo_projetos):
     """Exibe o sub-menu de gerenciamento de hábitos."""
 
     print("\n-- Gerenciar Hábitos --")
@@ -122,8 +131,8 @@ def gerenciar_habitos(repositorio):
     opcao = input("Escolha uma opção: ")
 
     if opcao == '1':
-        dados = preencher_dados_habito()
-        repositorio.salvar_dados_csv(dados[0], dados[1], dados[2], dados[3])
+        dados = preencher_dados_habito(repo_projetos)
+        repositorio.salvar_dados_csv(dados[0], dados[1], dados[2], dados[3], dados[4])
     elif opcao == '2':
         termo = solicitar_termo_busca()
         if termo == '0':
@@ -187,33 +196,111 @@ def relatorios_habitos(repositorio):
     else:
         print("Opção inválida.")
 
+def gerenciar_projetos(repo_p):
+    """ CRUD de Projetos: Focado apenas na gestão dos dados. """
+    print("\n-- Gerenciar Projetos --")
+    print("1. Cadastrar Projeto")
+    print("2. Editar Projeto")
+    print("3. Excluir Projeto")
+    print("4. Voltar")
+
+    opcao = input("Escolha uma opção: ")
+
+    if opcao == '1':
+        nome, desc = preencher_dados_projeto()
+        repo_p.salvar_dados_csv(nome, desc)
+        print(f"Projeto '{nome}' criado com sucesso!")
+        
+    elif opcao == '2':
+        termo = solicitar_termo_busca()
+        if termo == '0': return
+        resultados = repo_p.buscar_por_texto(termo)
+        exibir_dados(resultados, "projetos")
+        selecionado = solicitar_id(resultados)
+        if selecionado:
+            novo_nome, nova_desc = editar_dados_projeto(selecionado)
+            repo_p.editar_projeto(selecionado.id, novo_nome, nova_desc)
+            print("Projeto atualizado.")
+
+    elif opcao == '3':
+        termo = solicitar_termo_busca()
+        if termo == '0': return
+        resultados = repo_p.buscar_por_texto(termo)
+        exibir_dados(resultados, "projetos")
+        selecionado = solicitar_id(resultados)
+        if selecionado:
+            repo_p.excluir_projeto(selecionado.id)
+            print("Projeto removido.")
+            
+    elif opcao == '4':
+        return
+    else:
+        print("Opção inválida.")
+
+
+def relatorios_projetos(repo_p, repo_t, repo_h):
+    """ Relatórios de Projetos: Focado em análise e visualização. """
+    print("\n-- Relatórios de Projetos --")
+    print("1. Listar Projetos")
+    print("2. Relatório Individual")
+    print("3. Desempenho Geral")
+    print("4. Voltar")
+
+    opcao = input("Escolha uma opção: ")
+
+    if opcao == '1':
+        exibir_dados(repo_p.lista_projetos, "projetos")
+        
+    elif opcao == '2':
+        exibir_dados(repo_p.lista_projetos, "projetos")
+        selecionado = solicitar_id(repo_p.lista_projetos)
+        if selecionado:
+            dados = gerar_dados_projeto(selecionado, repo_t.lista_tarefas, repo_h.lista_habitos)
+            exibir_relatorio_projeto(dados)
+            
+    elif opcao == '3':
+        relatorio = gerar_desempenho_geral_projetos(repo_p.lista_projetos, repo_t.lista_tarefas, repo_h.lista_habitos)
+        exibir_relatorio_geral_projetos(relatorio)
+        
+    elif opcao == '4':
+        return
+    else:
+        print("Opção inválida.")
 
 def main():
-    """Função principal que inicia o programa."""
+    """ Função principal orquestradora. """
     repo_tarefas = RepositorioTarefas()
     repo_habitos = RepositorioHabitos()
-    print("Bem vindo ao Gerenciador de Tarefas e Hábitos!")
+    repo_projetos = RepositorioProjetos()
+
+    print("Bem vindo ao Gerenciador de Sistemas Pessoais!")
 
     while True:
         print("\n== Menu Principal ==")
-        print("1. Gerenciar Tarefas")
-        print("2. Relatórios de Tarefas")
-        print("3. Gerenciar Hábitos")
-        print("4. Relatórios de Hábitos")
-        print("5. Sair")
+        print("1. Gerenciar Projetos")
+        print("2. Relatórios de Projetos")
+        print("3. Gerenciar Tarefas")
+        print("4. Relatórios de Tarefas")
+        print("5. Gerenciar Hábitos")
+        print("6. Relatórios de Hábitos")
+        print("7. Sair")
 
         escolha = input("Escolha uma opção: ")
 
         if escolha == '1':
-            gerenciar_tarefas(repo_tarefas)
+            gerenciar_projetos(repo_projetos)
         elif escolha == '2':
-            relatorios_tarefas(repo_tarefas)
+            relatorios_projetos(repo_projetos, repo_tarefas, repo_habitos)
         elif escolha == '3':
-            gerenciar_habitos(repo_habitos)
+            gerenciar_tarefas(repo_tarefas, repo_projetos)
         elif escolha == '4':
-            relatorios_habitos(repo_habitos)
+            relatorios_tarefas(repo_tarefas)
         elif escolha == '5':
-            print("Encerrado.")
+            gerenciar_habitos(repo_habitos, repo_projetos)
+        elif escolha == '6':
+            relatorios_habitos(repo_habitos)
+        elif escolha == '7':
+            print("Sistema encerrado. Mantenha o foco!")
             break
         else:
             print("Opção inválida, tente novamente.")

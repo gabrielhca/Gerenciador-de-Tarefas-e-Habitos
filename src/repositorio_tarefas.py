@@ -23,7 +23,7 @@ class RepositorioTarefas():
         with open(self.ARQUIVO_CSV, mode="a", newline="", encoding="utf-8") as arquivo:
             if not arquivo_existe:
                 arquivo.write(
-                    "id;titulo;descricao;data_limite;concluida;data_criacao;data_conclusao\n")
+                    "id;titulo;descricao;data_limite;concluida;data_criacao;data_conclusao;projeto_id\n")
 
     def carrega_dados_csv(self):
         """ Lê os dados do arquivo CSV e popula a lista de tarefas. """
@@ -40,7 +40,7 @@ class RepositorioTarefas():
         except FileNotFoundError:
             self.arquivo_existe()
 
-    def salvar_dados_csv(self, titulo, descricao, data_limite_str):
+    def salvar_dados_csv(self, titulo, descricao, data_limite_str, projeto_id=None):
         """ Adiciona uma nova tarefa ao arquivo CSV. """
         self.arquivo_existe()
         concluida = False
@@ -49,14 +49,14 @@ class RepositorioTarefas():
         data_criacao_str = formatar_data_para_string(data_criacao)
         data_conclusao = None
         data_conclusao_str = ""
-
+        projeto_id_str = str(projeto_id) if projeto_id else ""
         data_limite = formatar_data(data_limite_str)
 
         with open(self.ARQUIVO_CSV, mode="a", newline="", encoding="utf-8") as arquivo:
             self.ultimo_id += 1
             concluida_str = "1" if concluida else "0"
             arquivo.write(
-                f"{self.ultimo_id};{titulo};{descricao};{data_limite_str};{concluida_str};{data_criacao_str};{data_conclusao_str}\n")
+                f"{self.ultimo_id};{titulo};{descricao};{data_limite_str};{concluida_str};{data_criacao_str};{data_conclusao_str};{projeto_id_str}\n")
             nova_tarefa = Tarefa(
                 self.ultimo_id,
                 titulo,
@@ -64,7 +64,8 @@ class RepositorioTarefas():
                 data_limite,
                 concluida,
                 data_criacao,
-                data_conclusao
+                data_conclusao,
+                projeto_id
             )
             self.lista_tarefas.append(nova_tarefa)
 
@@ -72,7 +73,7 @@ class RepositorioTarefas():
         """ Reescreve o CSV inteiro com o estado atual das tarefas, garantindo a integridade dos dados. """
         with open(self.ARQUIVO_CSV, mode="w", newline="", encoding="utf-8") as arquivo:
             arquivo.write(
-                "id;titulo;descricao;data_limite;concluida;data_criacao;data_conclusao\n")
+                "id;titulo;descricao;data_limite;concluida;data_criacao;data_conclusao;projeto_id\n")
             for tarefa in self.lista_tarefas:
 
                 data_limite_str = formatar_data_para_string(tarefa.data_limite)
@@ -81,8 +82,9 @@ class RepositorioTarefas():
                 data_conclusao_str = formatar_data_para_string(
                     tarefa.data_conclusao) if tarefa.data_conclusao else ""
                 concluida_str = "1" if tarefa.concluida else "0"
+                projeto_id_str = str(tarefa.projeto_id) if tarefa.projeto_id else ""
                 arquivo.write(
-                    f"{tarefa.id};{tarefa.titulo};{tarefa.descricao};{data_limite_str};{concluida_str};{data_criacao_str};{data_conclusao_str}\n")
+                    f"{tarefa.id};{tarefa.titulo};{tarefa.descricao};{data_limite_str};{concluida_str};{data_criacao_str};{data_conclusao_str};{projeto_id_str}\n")
 
     def marcar_tarefa_concluida(self, tarefa_id):
         """ Marca uma tarefa como concluída. """

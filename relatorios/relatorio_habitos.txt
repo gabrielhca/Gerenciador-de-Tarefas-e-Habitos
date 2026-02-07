@@ -1,0 +1,22 @@
+=== RELATÓRIO DE HABITOS ===
+
+Total: 9
+Em chamas: 0 (Ativos)
+Congelados: 0 (Inativos)
+Consistência Média: 0.00%
+
+--- Status dos Hábitos ---
+
+[NUNCA REALIZADO]
+  - Treino de Musculação: 0.00% consistência(0/1 execuções)
+  - Beber 2L de água: 0.00% consistência(0/1 execuções)
+  - Comer frutas: 0.00% consistência(0/1 execuções)
+  - Meditar: 0.00% consistência(0/1 execuções)
+  - Revisar Algoritmos: 0.00% consistência(0/1 execuções)
+  - Praticar Prolog: 0.00% consistência(0/1 execuções)
+  - Ler sobre Empreendedorismo: 0.00% consistência(0/1 execuções)
+  - Ler notícias: 0.00% consistência(0/1 execuções)
+  - Arrumar a casa: 0.00% consistência(0/1 execuções)
+
+Diagnóstico:
+Regular: Há espaço para melhorias.

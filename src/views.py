@@ -1,7 +1,7 @@
 """ Módulo responsável pela interface de usuário (visualizações) para tarefas e hábitos. """
 
 from src.utils import formatar_data, formatar_data_para_string, exportar_relatorio
-from src.relatorio_habitos import verificar_status_habito
+from src.relatorio_habitos import verificar_status_habito, calcular_consistencia_habito, calcular_execucoes_esperadas
 
 
 def exibir_dados(dados, tipo):
@@ -14,7 +14,22 @@ def exibir_dados(dados, tipo):
         print(item)
 
 
-def preencher_dados_tarefa():
+def preencher_dados_projeto():
+    """ Solicita ao usuário os dados para criar um novo projeto. """
+    nome = input("Nome do projeto: ")
+    descricao = input("Descrição do projeto: ")
+    return nome, descricao
+
+
+def editar_dados_projeto(projeto):
+    """ Solicita novos dados para um projeto, mantendo o atual se vazio. """
+    print(f"Editando: {projeto.nome}")
+    novo_nome = input("Novo nome (enter para manter): ")
+    nova_desc = input("Nova descrição (enter para manter): ")
+    return novo_nome, nova_desc
+
+
+def preencher_dados_tarefa(repo_projetos=None):
     """ Solicita ao usuário os dados para criar uma nova tarefa. """
     titulo = input("Título da tarefa: ")
     descricao = input("Descrição da tarefa: ")
@@ -23,7 +38,19 @@ def preencher_dados_tarefa():
         data_limite = input("Data limite (DD-MM-AAAA): ")
         if formatar_data(data_limite):
             break
-    return titulo, descricao, data_limite
+            
+    projeto_id = None
+    if repo_projetos:
+        print("\nDeseja associar a um projeto? (Caso não, deixe vazio)")
+        exibir_dados(repo_projetos.lista_projetos, "projetos")
+        pid = input("ID do projeto: ").strip()
+        if pid:
+            try:
+                projeto_id = int(pid)
+            except ValueError:
+                print("ID inválido, seguindo sem projeto.")
+    
+    return titulo, descricao, data_limite, projeto_id
 
 
 def editar_dados_tarefa(tarefa):
@@ -56,7 +83,7 @@ def editar_dados_habito(habito):
     return nome, frequencia
 
 
-def preencher_dados_habito():
+def preencher_dados_habito(repo_projetos=None):
     """ Solicita ao usuário os dados para criar um novo hábito. """
     nome = input("Nome do hábito: ")
     frequencia = input("Frequência (diario, semanal): ")
@@ -76,8 +103,19 @@ def preencher_dados_habito():
             data_ultima = formatar_data(data_str)
             if data_ultima:
                 break
+    
+    projeto_id = None
+    if repo_projetos:
+        print("\nDeseja associar a um projeto? (Caso não, deixe vazio)")
+        exibir_dados(repo_projetos.lista_projetos, "projetos")
+        pid = input("ID do projeto: ").strip()
+        if pid:
+            try:
+                projeto_id = int(pid)
+            except ValueError:
+                print("ID inválido, seguindo sem projeto.")
 
-    return nome, frequencia, contador_execucoes, data_ultima
+    return nome, frequencia, contador_execucoes, data_ultima, projeto_id
 
 
 def solicitar_termo_busca():
@@ -126,7 +164,7 @@ def formatar_relatorio_tarefas(relatorio):
         else:
             for t in lista_tarefas:
                 data_str = formatar_data_para_string(t.data_limite)
-                linhas.append(f"  [ID {t.id}] {t.titulo} - Vence: {data_str}")
+                linhas.append(f"  - {t.titulo} (Vence: {data_str})")
     
     linhas.append("\nDiagnóstico:")
     linhas.append(relatorio["diagnostico"])
@@ -191,3 +229,84 @@ def exibir_status_habitos(lista_habitos):
     for habito in lista_habitos:
         status, dias = verificar_status_habito(habito)
         print(f"[{status}] {habito.nome} - Dias sem fazer: {dias}")
+
+def formatar_relatorio_projeto_individual(dados):
+    """ Gera string formatada para o relatório de um único projeto. """
+    p = dados["projeto"]
+    m = dados["metricas"]
+    tarefas = dados.get("tarefas", [])
+    habitos = dados.get("habitos", [])
+    
+    linhas = []
+    linhas.append(f"=== PROJETO: {p.nome.upper()} ===\n")
+    linhas.append(f"Descrição: {p.descricao}")
+    linhas.append(f"Progresso Geral: {dados['progresso_geral']:.1f}%")
+    linhas.append(f"Diagnóstico: {dados['diagnostico']}")
+    
+    linhas.append("\n[Tarefas]")
+    linhas.append(f"Total: {m['tarefas_total']}")
+    if m['tarefas_total'] > 0:
+        linhas.append(f"Conclusão: {m['tarefas_conclusao']:.1f}%")
+        for t in tarefas:
+            data_str = formatar_data_para_string(t.data_limite)
+            linhas.append(f"  - {t.titulo} (Vence: {data_str})")
+    
+    linhas.append("\n[Hábitos]")
+    linhas.append(f"Total: {m['habitos_total']}")
+    if m['habitos_total'] > 0:
+        linhas.append(f"Consistência Média: {m['habitos_consistencia']:.1f}%")
+        for h in habitos:
+            consistencia = calcular_consistencia_habito(h)
+            esperadas = calcular_execucoes_esperadas(h)
+            linhas.append(f"  - {h.nome}: {consistencia:.2f}% consistência({h.contador_execucoes}/{esperadas} execuções)")
+        
+    return "\n".join(linhas)
+
+def exibir_relatorio_projeto(dados):
+    """ Exibe o relatório individual e oferece exportação. """
+    texto = formatar_relatorio_projeto_individual(dados)
+    print("\n" + texto)
+    
+    salvar = input("\nDeseja exportar este relatório? (s/n): ").lower()
+    if salvar == "s":
+        nome_arq = f"relatorio_projeto_{dados['projeto'].id}.txt"
+        exportar_relatorio(texto, nome_arq)
+
+def formatar_relatorio_geral_projetos(relatorio):
+    """ Gera string formatada para o desempenho sistêmico (todos os projetos). """
+    if not relatorio:
+        return "Nenhum projeto cadastrado."
+        
+    m = relatorio["metricas"]
+    cats = relatorio["categorias"]
+    
+    linhas = []
+    linhas.append("=== DESEMPENHO SISTÊMICO (PROJETOS) ===\n")
+    linhas.append(f"Total de Projetos: {m['total_projetos']}")
+    linhas.append(f"Média Global de Progresso: {m['media_global']:.1f}%\n")
+    
+    linhas.append("--- Detalhamento por Categoria ---")
+    
+    ordem = ["Excelente", "Bom", "Regular", "Crítico", "Vazio"]
+    for categoria in ordem:
+        lista = cats.get(categoria, [])
+        if lista:
+            linhas.append(f"\n[{categoria.upper()}]")
+            for item in lista:
+                p = item["projeto"]
+                prog = item["progresso_geral"]
+                linhas.append(f"  - {p.nome}: {prog:.1f}%")
+    
+    linhas.append("\n=== DIAGNÓSTICO GERAL ===")
+    linhas.append(relatorio["diagnostico_geral"])
+    
+    return "\n".join(linhas)
+
+def exibir_relatorio_geral_projetos(relatorio):
+    """ Exibe o relatório geral e oferece exportação. """
+    texto = formatar_relatorio_geral_projetos(relatorio)
+    print("\n" + texto)
+    
+    salvar = input("\nDeseja exportar este relatório? (s/n): ").lower()
+    if salvar == "s":
+        exportar_relatorio(texto, "desempenho_projetos.txt")

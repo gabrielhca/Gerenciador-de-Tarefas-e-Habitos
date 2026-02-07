@@ -1,0 +1,20 @@
+=== PROJETO: FACULDADE ===
+
+Descrição: Atividades relacionadas a materias como Prolog, Algoritmos, Automatos e Empreendedorismo
+Progresso Geral: 0.0%
+Diagnóstico: Crítico
+
+[Tarefas]
+Total: 4
+Conclusão: 0.0%
+  - Prova de Automatos (Vence: 20-02-2026)
+  - Trabalho de Algoritmos (Vence: 28-02-2026)
+  - Estudar Prolog (Vence: 15-02-2026)
+  - Trabalho de Empreendedorismo (Vence: 25-02-2026)
+
+[Hábitos]
+Total: 3
+Consistência Média: 0.0%
+  - Revisar Algoritmos: 0.00% consistência(0/1 execuções)
+  - Praticar Prolog: 0.00% consistência(0/1 execuções)
+  - Ler sobre Empreendedorismo: 0.00% consistência(0/1 execuções)

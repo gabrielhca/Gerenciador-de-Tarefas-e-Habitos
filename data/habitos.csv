@@ -1,0 +1,10 @@
+id;nome;frequencia;contador_execucoes;data_criacao;data_ultima_execucao;projeto_id
+1;Treino de Musculação;diario;0;07-02-2026;;2
+2;Beber 2L de água;diario;0;07-02-2026;;2
+3;Comer frutas;diario;0;07-02-2026;;2
+4;Meditar;diario;0;07-02-2026;;2
+5;Revisar Algoritmos;semanal;0;07-02-2026;;1
+6;Praticar Prolog;semanal;0;07-02-2026;;1
+7;Ler sobre Empreendedorismo;semanal;0;07-02-2026;;1
+8;Ler notícias;diario;0;07-02-2026;;
+9;Arrumar a casa;semanal;0;07-02-2026;;

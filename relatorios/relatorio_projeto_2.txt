@@ -1,0 +1,20 @@
+=== PROJETO: VIDA SAUDÁVEL ===
+
+Descrição: Atividades relacionadas a exercicios fisicos e nutricao
+Progresso Geral: 0.0%
+Diagnóstico: Crítico
+
+[Tarefas]
+Total: 3
+Conclusão: 0.0%
+  - Comprar suplementos (Vence: 10-02-2026)
+  - Agendar nutricionista (Vence: 12-02-2026)
+  - Fazer compras da semana (Vence: 08-02-2026)
+
+[Hábitos]
+Total: 4
+Consistência Média: 0.0%
+  - Treino de Musculação: 0.00% consistência(0/1 execuções)
+  - Beber 2L de água: 0.00% consistência(0/1 execuções)
+  - Comer frutas: 0.00% consistência(0/1 execuções)
+  - Meditar: 0.00% consistência(0/1 execuções)

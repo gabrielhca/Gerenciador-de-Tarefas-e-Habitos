@@ -1,0 +1,13 @@
+=== DESEMPENHO SISTÊMICO (PROJETOS) ===
+
+Total de Projetos: 2
+Média Global de Progresso: 0.0%
+
+--- Detalhamento por Categoria ---
+
+[CRÍTICO]
+  - Faculdade: 0.0%
+  - Vida Saudável: 0.0%
+
+=== DIAGNÓSTICO GERAL ===
+Alerta: Muitas áreas da sua vida estão em estado crítico.
