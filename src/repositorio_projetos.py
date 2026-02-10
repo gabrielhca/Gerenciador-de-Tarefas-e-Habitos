@@ -3,6 +3,7 @@
 from pathlib import Path
 from src.models import Projeto
 
+
 class RepositorioProjetos:
     """ Gerencia a persistência e recuperação de projetos no arquivo CSV. """
 
@@ -43,7 +44,6 @@ class RepositorioProjetos:
         with open(self.ARQUIVO_CSV, mode="a", newline="", encoding="utf-8") as arquivo:
             self.ultimo_id += 1
             arquivo.write(f"{self.ultimo_id};{nome};{descricao}\n")
-            
             novo_projeto = Projeto(self.ultimo_id, nome, descricao)
             self.lista_projetos.append(novo_projeto)
             return novo_projeto

@@ -3,6 +3,7 @@
 from src.utils import formatar_data_para_string, formatar_data
 from datetime import date
 
+
 class Projeto:
     """ Constrói um contento ou objetivo maior que agrupa tarefas e hábitos. """
 
@@ -15,10 +16,11 @@ class Projeto:
     @property
     def nome(self):
         return self._nome
+
     @nome.setter
     def nome(self, valor):
         """ Define o nome, rejeita nomes vazios. """
-        if not valor or not isinstance(valor,str) or not valor.strip():
+        if not valor or not isinstance(valor, str) or not valor.strip():
             raise ValueError("O nome do projeto não pode ser vazio.")
         self._nome = valor
 
@@ -31,13 +33,13 @@ class Projeto:
         nome = partes[1]
         descricao = partes[2]
         return cls(projeto_id, nome, descricao)
-    
+
     def __hash__(self):
         return hash(self.id)
 
     def __str__(self):
         return f"{self.id} - {self.nome}"
-    
+
     def __repr__(self):
         return f"Projeto(id={self.id}, nome={self.nome}, descricao={self.descricao})"
 
@@ -55,13 +57,15 @@ class Tarefa:
         self.data_criacao = data_criacao
         self.data_conclusao = data_conclusao
         self.projeto_id = projeto_id
+
     @property
     def titulo(self):
         return self._titulo
+
     @titulo.setter
     def titulo(self, valor):
         """ Define o título, ma rejeita títulos vazios. """
-        if not valor or not isinstance(valor,str) or not valor.strip():
+        if not valor or not isinstance(valor, str) or not valor.strip():
             raise ValueError("O título da tarefa não pode ser vazio.")
         self._titulo = valor
 
@@ -87,12 +91,12 @@ class Tarefa:
             data_conclusao = formatar_data(partes[6])
         else:
             data_conclusao = None
-        
+
         if len(partes) > 7 and partes[7]:
             projeto_id = int(partes[7])
         else:
             projeto_id = None
-        
+
         return cls(tarefa_id, titulo, descricao, data_limite, status_conclusao, data_criacao, data_conclusao, projeto_id)
 
     def __eq__(self, outro):
@@ -130,24 +134,24 @@ class Habito:
     @property
     def nome(self):
         return self._nome
-    
+
     @nome.setter
     def nome(self, valor):
         """ Define o nome, rejeita nomes vazios. """
-        if not valor or not isinstance(valor,str) or not valor.strip():
+        if not valor or not isinstance(valor, str) or not valor.strip():
             raise ValueError("O nome do hábito não pode ser vazio.")
         self._nome = valor
 
     @property
     def frequencia(self):
         return self._frequencia
-    
+
     @frequencia.setter
     def frequencia(self, valor):
         """ Define a frequência, rejeita frequências vazias. """
-        if not valor or not isinstance(valor,str) or not valor.strip():
+        if not valor or not isinstance(valor, str) or not valor.strip():
             raise ValueError("A frequência do hábito não pode ser vazia.")
-        self._frequencia = valor    
+        self._frequencia = valor
 
     @classmethod
     def from_csv(cls, linha):
@@ -165,6 +169,7 @@ class Habito:
             contador_execucoes = 0
 
         # Protege contra IndexError
+        data_criacao = None
         if len(partes) > 4 and partes[4]:
             data_criacao = formatar_data(partes[4])
 
@@ -172,7 +177,7 @@ class Habito:
             data_ultima_execucao = formatar_data(partes[5])
         else:
             data_ultima_execucao = None
-        
+
         if len(partes) > 6 and partes[6]:
             projeto_id = int(partes[6])
         else:

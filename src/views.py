@@ -16,7 +16,11 @@ def exibir_dados(dados, tipo):
 
 def preencher_dados_projeto():
     """ Solicita ao usuário os dados para criar um novo projeto. """
-    nome = input("Nome do projeto: ")
+    while True:
+        nome = input("Nome do projeto: ")
+        if nome.strip():
+            break
+        print("O nome do projeto não pode ser vazio.")
     descricao = input("Descrição do projeto: ")
     return nome, descricao
 
