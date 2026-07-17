@@ -710,6 +710,7 @@ function renderProjetosView(){
   </div>
   <div class="content-grid">
     <div class="actions-col">
+      <button class="btn-blue" data-action="filtro-toggle">Filtros</button>
       <button class="btn-blue" data-action="novo-projeto">Novo</button>
       <button class="btn-blue" data-action="editar-projeto" data-id="${proj.id}">Editar</button>
       <button class="btn-blue" data-action="excluir-projeto" data-id="${proj.id}">Excluir</button>
@@ -956,6 +957,7 @@ function onAction(e){
   if(action==='subview'){ state.subview = value; state.filtro=''; state.filtroCategoria='todas'; render(); return; }
   if(action==='cal-prev'){ state.calMonth--; if(state.calMonth<0){state.calMonth=11; state.calYear--;} render(); return; }
   if(action==='cal-next'){ state.calMonth++; if(state.calMonth>11){state.calMonth=0; state.calYear++;} render(); return; }
+  if(action==='filtro-toggle'){ showToast('Use a busca e os filtros acima das listas em Tarefas / Hábitos.'); return; }
   if(action==='filtro-categoria'){ state.filtroCategoria = value; render(); return; }
   if(action==='overlay-close'){ state.modal = null; render(); return; }
   if(action==='fechar-modal'){ state.modal = null; render(); return; }
