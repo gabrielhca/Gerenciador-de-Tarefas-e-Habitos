@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blueprint — Projete o seu dia, Construa a sua vida.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --lime:#cdf542;
+    --lime-dark:#a9d61f;
+    --ink:#152241;
+    --ink-soft:#3a4a6b;
+    --white:#ffffff;
+    --pill-blue:#7c92e4;
+    --pill-blue-dark:#5f78d6;
+    --red:#e2483b;
+    --red-bg:#fdeceb;
+    --teal:#28b6a6;
+    --amber:#e7a325;
+    --gray:#98a3b8;
+    --cloud:#eef2fb;
+    --card-radius:28px;
+    --pill-radius:999px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:'Nunito',sans-serif;
+    color:var(--ink);
+    background:#0b1d3a;
+    min-height:100vh;
+  }
+  h1,h2,h3,.display{font-family:'Baloo 2',sans-serif;}
+  button{font-family:inherit;cursor:pointer;border:none;}
+  input,select,textarea{font-family:inherit;}
+  a{color:inherit;}
+  #app{min-height:100vh;}
+
+  /* ---------- LANDING ---------- */
+  .landing{
+    position:relative;
+    min-height:100vh;
+    background:url('assets/bg-sky.jpg') center/cover no-repeat;
+    display:flex;
+    flex-direction:column;
+  }
+  .topbar{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:28px 48px;
+  }
+  .logo{font-family:'Baloo 2';font-weight:700;font-size:26px;color:#fff;letter-spacing:.5px;}
+  .btn-pill{
+    padding:12px 26px;border-radius:var(--pill-radius);
+    background:var(--lime);color:var(--ink);font-weight:700;font-size:15px;
+    transition:transform .15s ease, background .15s ease;
+  }
+  .btn-pill:hover{background:var(--lime-dark);transform:translateY(-1px);}
+  .hero{
+    flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;padding:20px 20px 0;
+  }
+  .hero h1{
+    font-size:44px;font-weight:700;color:var(--ink);line-height:1.25;margin:0 0 44px;
+    text-shadow:0 1px 0 rgba(255,255,255,.25);
+  }
+  .carousel-row{
+    display:flex;gap:22px;justify-content:center;align-items:flex-end;
+    margin-bottom:0;padding-bottom:0;flex-wrap:wrap;
+  }
+  .carousel-row img{
+    width:150px;height:150px;object-fit:cover;border-radius:22px;
+    box-shadow:0 12px 24px rgba(10,30,60,.25);
+    border:3px solid rgba(255,255,255,.5);
+  }
+  .footer{
+    margin-top:60px;
+    background:rgba(120,155,205,.35);
+    backdrop-filter:blur(6px);
+    padding:36px 48px;
+    display:flex;flex-wrap:wrap;gap:32px;justify-content:space-between;
+    color:var(--ink);
+  }
+  .footer h4{margin:0 0 10px;font-size:16px;font-family:'Baloo 2';}
+  .footer p{margin:4px 0;font-size:14px;opacity:.85;}
+  .footer small{opacity:.7;}
+
+  /* ---------- APP / DASHBOARD ---------- */
+  .app-shell{
+    min-height:100vh;
+    position:relative;
+    background:url('assets/bg-sky.jpg') center/cover no-repeat;
+  }
+  .app-shell::before{
+    content:"";position:absolute;inset:0;
+    background:linear-gradient(180deg, rgba(9,26,55,.72), rgba(9,26,55,.85));
+  }
+  .app-inner{position:relative;z-index:1;padding:28px 40px 50px;}
+  .app-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:26px;}
+  .user-chip{display:flex;align-items:center;gap:14px;color:#fff;font-weight:700;}
+  .burger{
+    width:44px;height:44px;border-radius:50%;background:#fff;color:var(--ink);
+    display:flex;align-items:center;justify-content:center;font-size:18px;position:relative;
+  }
+  .burger-menu{
+    position:absolute;top:56px;right:0;background:#fff;border-radius:16px;box-shadow:0 12px 30px rgba(0,0,0,.25);
+    overflow:hidden;min-width:160px;z-index:20;
+  }
+  .burger-menu button{display:block;width:100%;text-align:left;padding:12px 16px;background:none;font-weight:700;color:var(--ink);}
+  .burger-menu button:hover{background:var(--cloud);}
+
+  .layout{display:grid;grid-template-columns:260px 1fr;gap:26px;align-items:start;}
+  @media (max-width:900px){.layout{grid-template-columns:1fr;}}
+
+  .side{display:flex;flex-direction:column;gap:18px;}
+  .profile-photo{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:var(--card-radius);box-shadow:0 10px 26px rgba(0,0,0,.3);}
+
+  .cal-card{background:#fff;border-radius:var(--card-radius);padding:18px;}
+  .cal-head{display:flex;align-items:center;justify-content:space-between;font-family:'Baloo 2';font-weight:700;margin-bottom:10px;}
+  .cal-head button{background:none;color:var(--ink-soft);font-size:16px;padding:2px 8px;border-radius:8px;}
+  .cal-head button:hover{background:var(--cloud);}
+  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;font-size:12px;}
+  .cal-grid .dow{color:var(--gray);font-weight:700;padding-bottom:4px;}
+  .cal-grid .day{
+    padding:6px 0;border-radius:8px;color:var(--ink-soft);position:relative;
+  }
+  .cal-grid .day.today{background:var(--lime);color:var(--ink);font-weight:800;border-radius:50%;}
+  .cal-grid .day.due{border:2px solid var(--red);border-radius:50%;color:var(--red);font-weight:700;}
+  .cal-grid .day.done{border:2px solid var(--teal);border-radius:50%;color:var(--teal);font-weight:700;}
+  .cal-grid .day.empty{visibility:hidden;}
+
+  .stat-pill{
+    display:flex;align-items:center;gap:12px;background:#fff;border-radius:var(--pill-radius);
+    padding:10px 16px;font-weight:700;font-size:14px;color:var(--ink);
+  }
+  .stat-badge{
+    width:26px;height:26px;border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;
+    font-size:13px;font-weight:800;flex:none;
+  }
+  .b-lime{background:var(--lime-dark);color:#fff;}
+  .b-teal{background:var(--teal);}
+  .b-red{background:var(--red);}
+
+  .nav-pills{display:flex;gap:14px;margin-bottom:20px;flex-wrap:wrap;}
+  .nav-pill{
+    padding:12px 26px;border-radius:var(--pill-radius);background:#fff;color:var(--ink);font-weight:700;
+    box-shadow:0 6px 14px rgba(0,0,0,.15);
+  }
+  .nav-pill.active{background:var(--lime);}
+
+  .main-card{background:#fff;border-radius:var(--card-radius);padding:26px 30px;min-height:420px;}
+  .selector-bar{
+    display:flex;align-items:center;justify-content:space-between;background:var(--cloud);
+    border-radius:16px;padding:14px 20px;margin-bottom:22px;font-weight:700;color:var(--ink);
+  }
+  .selector-bar select{background:none;border:none;font-weight:700;color:var(--ink);font-size:16px;flex:1;appearance:none;cursor:pointer;}
+
+  .content-grid{display:grid;grid-template-columns:180px 1fr;gap:30px;}
+  @media (max-width:760px){.content-grid{grid-template-columns:1fr;}}
+  .actions-col{display:flex;flex-direction:column;gap:12px;}
+  .btn-blue{
+    background:var(--pill-blue);color:#fff;font-weight:700;padding:12px 10px;border-radius:var(--pill-radius);
+    text-align:center;font-size:14px;
+  }
+  .btn-blue:hover{background:var(--pill-blue-dark);}
+
+  .metrics-title{font-family:'Baloo 2';font-weight:700;margin:26px 0 10px;font-size:15px;color:var(--ink);}
+  .bar-row{display:flex;align-items:center;gap:8px;font-size:12px;margin-bottom:6px;color:var(--ink-soft);}
+  .bar-row .lbl{width:30px;font-weight:700;}
+  .bar-track{flex:1;background:var(--cloud);border-radius:6px;height:10px;overflow:hidden;}
+  .bar-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--lime),var(--pill-blue));}
+  .bar-row .val{width:24px;text-align:right;color:var(--gray);}
+
+  table{width:100%;border-collapse:collapse;font-size:14px;}
+  th{text-align:left;color:var(--gray);font-weight:800;font-size:12px;text-transform:uppercase;padding:6px 8px;border-bottom:2px solid var(--cloud);}
+  td{padding:10px 8px;border-bottom:1px solid var(--cloud);color:var(--ink);}
+  tr.late td{color:var(--red);font-weight:700;}
+  .status-tag{font-weight:700;font-size:13px;}
+  .status-tag.ok{color:var(--ink-soft);}
+  .status-tag.late{color:var(--red);}
+  .exec-dot{display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:13px;}
+  .dot{width:12px;height:12px;border-radius:50%;flex:none;}
+  .dot.fire{background:var(--lime-dark);}
+  .dot.frozen{background:var(--teal);}
+  .dot.progress{background:var(--gray);}
+  .row-actions{display:flex;gap:6px;}
+  .icon-btn{
+    width:28px;height:28px;border-radius:8px;background:var(--cloud);color:var(--ink-soft);
+    display:inline-flex;align-items:center;justify-content:center;font-size:13px;
+  }
+  .icon-btn:hover{background:#dfe6f7;}
+  .icon-btn.danger:hover{background:var(--red-bg);color:var(--red);}
+
+  .section-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px;}
+  .search-box{
+    display:flex;align-items:center;gap:8px;background:var(--cloud);border-radius:var(--pill-radius);
+    padding:8px 16px;flex:1;max-width:320px;
+  }
+  .search-box input{border:none;background:none;outline:none;width:100%;font-size:14px;}
+  .filter-chips{display:flex;gap:8px;flex-wrap:wrap;}
+  .chip{padding:8px 16px;border-radius:var(--pill-radius);background:var(--cloud);color:var(--ink-soft);font-weight:700;font-size:13px;}
+  .chip.active{background:var(--pill-blue);color:#fff;}
+  .empty-state{padding:40px 10px;text-align:center;color:var(--gray);font-weight:700;}
+
+  .kpi-row{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:24px;}
+  .kpi{flex:1;min-width:150px;background:var(--cloud);border-radius:18px;padding:18px;}
+  .kpi .num{font-family:'Baloo 2';font-size:28px;font-weight:800;color:var(--ink);}
+  .kpi .lbl{font-size:13px;color:var(--ink-soft);font-weight:700;}
+  .diag-box{border-radius:18px;padding:18px 20px;font-weight:700;margin-top:6px;}
+  .diag-critico{background:var(--red-bg);color:var(--red);}
+  .diag-bom{background:#eafaf3;color:var(--teal);}
+  .diag-regular{background:#fff6e3;color:var(--amber);}
+  .diag-excelente{background:#eafaf3;color:#1f9f6f;}
+  .cat-block{margin-bottom:14px;}
+  .cat-block h4{margin:0 0 8px;font-family:'Baloo 2';font-size:14px;}
+  .proj-bar{display:flex;justify-content:space-between;align-items:center;background:var(--cloud);border-radius:12px;padding:10px 14px;margin-bottom:6px;font-weight:700;font-size:13px;}
+
+  /* ---------- MODAL ---------- */
+  .overlay{
+    position:fixed;inset:0;background:rgba(10,20,40,.55);
+    display:flex;align-items:center;justify-content:center;z-index:100;padding:20px;
+  }
+  .modal{background:#fff;border-radius:24px;padding:28px;width:100%;max-width:440px;max-height:88vh;overflow:auto;}
+  .modal h3{margin:0 0 18px;font-family:'Baloo 2';}
+  .field{margin-bottom:14px;}
+  .field label{display:block;font-size:13px;font-weight:700;color:var(--ink-soft);margin-bottom:6px;}
+  .field input,.field select,.field textarea{
+    width:100%;padding:11px 14px;border-radius:12px;border:1.5px solid #e2e7f2;font-size:14px;outline:none;
+  }
+  .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--pill-blue);}
+  .modal-actions{display:flex;gap:10px;margin-top:20px;}
+  .btn-secondary{background:var(--cloud);color:var(--ink-soft);font-weight:700;padding:11px 18px;border-radius:var(--pill-radius);flex:1;text-align:center;}
+  .btn-primary{background:var(--lime);color:var(--ink);font-weight:800;padding:11px 18px;border-radius:var(--pill-radius);flex:1;text-align:center;}
+  .btn-primary:hover{background:var(--lime-dark);}
+  .toast{
+    position:fixed;bottom:26px;left:50%;transform:translateX(-50%);
+    background:var(--ink);color:#fff;padding:12px 22px;border-radius:var(--pill-radius);font-weight:700;
+    z-index:200;box-shadow:0 10px 26px rgba(0,0,0,.3);
+  }
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+/* =========================================================
+   BLUEPRINT — MVP funcional
+   Persistência: window.storage (artifact) com fallback para
+   localStorage quando executado fora do ambiente Claude.
+========================================================= */
+
+const Storage = {
+  async get(key){
+    try{
+      if (typeof window.storage !== 'undefined' && window.storage){
+        const r = await window.storage.get(key);
+        return r ? JSON.parse(r.value) : null;
+      }
+    }catch(e){ /* chave inexistente ou storage indisponível */ }
+    try{
+      const v = localStorage.getItem(key);
+      return v ? JSON.parse(v) : null;
+    }catch(e){ return null; }
+  },
+  async set(key, value){
+    try{
+      if (typeof window.storage !== 'undefined' && window.storage){
+        await window.storage.set(key, JSON.stringify(value));
+        return;
+      }
+    }catch(e){}
+    try{ localStorage.setItem(key, JSON.stringify(value)); }catch(e){}
+  }
+};
+
+/* ---------- utilidades de data ---------- */
+function hoje(){ const d = new Date(); d.setHours(0,0,0,0); return d; }
+function parseData(str){
+  if(!str) return null;
+  const [d,m,y] = str.split('-').map(Number);
+  if(!d||!m||!y) return null;
+  const dt = new Date(y, m-1, d); dt.setHours(0,0,0,0); return dt;
+}
+function formatarData(date){
+  if(!date) return '';
+  const d = String(date.getDate()).padStart(2,'0');
+  const m = String(date.getMonth()+1).padStart(2,'0');
+  return `${d}-${m}-${date.getFullYear()}`;
+}
+function addDias(date, n){ const d = new Date(date); d.setDate(d.getDate()+n); return d; }
+function diffDias(a,b){ return Math.round((a-b)/86400000); }
+function mesmoDia(a,b){ return a && b && a.getTime()===b.getTime(); }
+
+/* ---------- Estado / seed inicial (replica os dados de exemplo do CSV) ---------- */
+const SEED_PROJETOS = [
+  {id:1, nome:'Faculdade', descricao:'Atividades relacionadas a materias como Prolog, Algoritmos, Automatos e Empreendedorismo'},
+  {id:2, nome:'Vida Saudável', descricao:'Atividades relacionadas a exercicios fisicos e nutricao'}
+];
+const SEED_TAREFAS = [
+  {id:1, titulo:'Prova de Automatos', descricao:'Estudar os 3 primeiros capitulos', dataLimite:'20-02-2026', concluida:false, dataCriacao:'07-02-2026', dataConclusao:null, projetoId:1},
+  {id:2, titulo:'Trabalho de Algoritmos', descricao:'Implementar arvore rubro-negra', dataLimite:'28-02-2026', concluida:false, dataCriacao:'07-02-2026', dataConclusao:null, projetoId:1},
+  {id:3, titulo:'Estudar Prolog', descricao:'Resolver lista de exercicios 2', dataLimite:'15-02-2026', concluida:false, dataCriacao:'07-02-2026', dataConclusao:null, projetoId:1},
+  {id:4, titulo:'Trabalho de Empreendedorismo', descricao:'Escrever plano de negocios', dataLimite:'25-02-2026', concluida:false, dataCriacao:'07-02-2026', dataConclusao:null, projetoId:1},
+  {id:5, titulo:'Comprar suplementos', descricao:'Whey e Creatina', dataLimite:'10-02-2026', concluida:false, dataCriacao:'07-02-2026', dataConclusao:null, projetoId:2},
+  {id:6, titulo:'Agendar nutricionista', descricao:'Consulta de retorno', dataLimite:'12-02-2026', concluida:false, dataCriacao:'07-02-2026', dataConclusao:null, projetoId:2},
+  {id:7, titulo:'Fazer compras da semana', descricao:'Vegetais, frango e ovos', dataLimite:'08-02-2026', concluida:false, dataCriacao:'07-02-2026', dataConclusao:null, projetoId:2},
+  {id:8, titulo:'Pagar internet', descricao:'Conta de Fevereiro', dataLimite:'10-02-2026', concluida:false, dataCriacao:'07-02-2026', dataConclusao:null, projetoId:null},
+  {id:9, titulo:'Levar cachorro no vet', descricao:'Vacina anual', dataLimite:'15-02-2026', concluida:false, dataCriacao:'07-02-2026', dataConclusao:null, projetoId:null}
+];
+const SEED_HABITOS = [
+  {id:1, nome:'Treino de Musculação', frequencia:'diario', contador:0, dataCriacao:'07-02-2026', dataUltimaExecucao:null, projetoId:2},
+  {id:2, nome:'Beber 2L de água', frequencia:'diario', contador:0, dataCriacao:'07-02-2026', dataUltimaExecucao:null, projetoId:2},
+  {id:3, nome:'Comer frutas', frequencia:'diario', contador:0, dataCriacao:'07-02-2026', dataUltimaExecucao:null, projetoId:2},
+  {id:4, nome:'Meditar', frequencia:'diario', contador:0, dataCriacao:'07-02-2026', dataUltimaExecucao:null, projetoId:2},
+  {id:5, nome:'Revisar Algoritmos', frequencia:'semanal', contador:0, dataCriacao:'07-02-2026', dataUltimaExecucao:null, projetoId:1},
+  {id:6, nome:'Praticar Prolog', frequencia:'semanal', contador:0, dataCriacao:'07-02-2026', dataUltimaExecucao:null, projetoId:1},
+  {id:7, nome:'Ler sobre Empreendedorismo', frequencia:'semanal', contador:0, dataCriacao:'07-02-2026', dataUltimaExecucao:null, projetoId:1},
+  {id:8, nome:'Ler notícias', frequencia:'diario', contador:0, dataCriacao:'07-02-2026', dataUltimaExecucao:null, projetoId:null},
+  {id:9, nome:'Arrumar a casa', frequencia:'semanal', contador:0, dataCriacao:'07-02-2026', dataUltimaExecucao:null, projetoId:null}
+];
+
+let state = {
+  loaded:false,
+  view:'landing',       // landing | app
+  subview:'projetos',   // progresso | projetos | tarefas | habitos
+  usuario:null,
+  projetos:[], tarefas:[], habitos:[],
+  selectedProjetoId:null,
+  filtro:'', filtroCategoria:'todas',
+  calMonth:new Date().getMonth(), calYear:new Date().getFullYear(),
+  menuOpen:false,
+  modal:null,
+  toast:null
+};
+
+async function loadAll(){
+  const [projetos, tarefas, habitos, usuario] = await Promise.all([
+    Storage.get('bp:projetos'), Storage.get('bp:tarefas'), Storage.get('bp:habitos'), Storage.get('bp:usuario')
+  ]);
+  state.projetos = projetos || SEED_PROJETOS;
+  state.tarefas = tarefas || SEED_TAREFAS;
+  state.habitos = habitos || SEED_HABITOS;
+  state.usuario = usuario || null;
+  state.selectedProjetoId = state.projetos[0] ? state.projetos[0].id : null;
+  state.loaded = true;
+}
+function saveProjetos(){ Storage.set('bp:projetos', state.projetos); }
+function saveTarefas(){ Storage.set('bp:tarefas', state.tarefas); }
+function saveHabitos(){ Storage.set('bp:habitos', state.habitos); }
+function saveUsuario(){ Storage.set('bp:usuario', state.usuario); }
+
+function nextId(list){ return list.reduce((m,i)=>Math.max(m,i.id),0)+1; }
+function showToast(msg){ state.toast = msg; render(); setTimeout(()=>{ state.toast=null; render(); }, 2200); }
+
+/* ---------- lógica de negócio (replica src/relatorio_*.py) ---------- */
+function tarefasDoProjeto(pid){ return state.tarefas.filter(t=>t.projetoId===pid); }
+function habitosDoProjeto(pid){ return state.habitos.filter(h=>h.projetoId===pid); }
+
+function filtrarPendentes(l){ return l.filter(t=>!t.concluida); }
+function filtrarConcluidas(l){ return l.filter(t=>t.concluida); }
+function filtrarAtrasadas(l){
+  const h = hoje();
+  return l.filter(t=>!t.concluida && parseData(t.dataLimite) && parseData(t.dataLimite) < h);
+}
+function percentualConclusao(l){
+  if(!l.length) return 0;
+  return (filtrarConcluidas(l).length / l.length) * 100;
+}
+function categoriaPrazoTarefa(t){
+  if(t.concluida) return null;
+  const h = hoje(), amanha = addDias(h,1), semana = addDias(h,7);
+  const dl = parseData(t.dataLimite);
+  if(!dl) return 'Futuras';
+  if(dl < h) return 'Atrasadas';
+  if(dl <= amanha) return 'Urgentes';
+  if(dl <= semana) return 'Próximas';
+  return 'Futuras';
+}
+function diagnosticoTarefas(l){
+  const atrasadas = filtrarAtrasadas(l).length;
+  const urgentes = l.filter(t=>categoriaPrazoTarefa(t)==='Urgentes').length;
+  const taxa = percentualConclusao(l);
+  if(atrasadas>0) return {texto:`Crítico: você tem ${atrasadas} tarefa(s) atrasada(s). Priorize-as imediatamente.`, tipo:'critico'};
+  if(urgentes>0) return {texto:`Atenção: você tem ${urgentes} tarefa(s) urgente(s). Foque nelas em breve.`, tipo:'regular'};
+  if(taxa===100 && l.length) return {texto:'Excelente: todas as suas tarefas foram concluídas com sucesso!', tipo:'excelente'};
+  return {texto:'Bom: a situação está sob controle, continue assim.', tipo:'bom'};
+}
+
+function execucoesEsperadas(h){
+  const criado = parseData(h.dataCriacao);
+  if(!criado) return 0;
+  let dias = diffDias(hoje(), criado);
+  if(dias<0) dias=0;
+  if(h.frequencia==='diario') return dias+1;
+  if(h.frequencia==='semanal') return Math.floor(dias/7)+1;
+  return 0;
+}
+function consistenciaHabito(h){
+  const esp = execucoesEsperadas(h);
+  if(esp===0) return 0;
+  return Math.min(100, (h.contador/esp)*100);
+}
+function statusHabito(h){
+  const criado = parseData(h.dataCriacao);
+  if(!h.dataUltimaExecucao){
+    const dias = criado ? diffDias(hoje(), criado) : 0;
+    return {status:'Nunca realizado', dias};
+  }
+  const ultima = parseData(h.dataUltimaExecucao);
+  let dias = diffDias(hoje(), ultima);
+  if(dias<0) dias=0;
+  if(h.frequencia==='diario'){
+    if(dias===0) return {status:'Em chamas', dias};
+    if(dias===1) return {status:'Em dia', dias};
+    if(dias<=3) return {status:'Atenção', dias};
+    return {status:'Congelado', dias};
+  }
+  if(h.frequencia==='semanal'){
+    if(dias<=7) return {status:'Em chamas', dias};
+    if(dias<=14) return {status:'Atenção', dias};
+    return {status:'Congelado', dias};
+  }
+  return {status:'Indefinido', dias};
+}
+
+function progressoProjeto(p){
+  const tarefas = tarefasDoProjeto(p.id), habitos = habitosDoProjeto(p.id);
+  const taxaTarefas = tarefas.length ? percentualConclusao(tarefas) : null;
+  const mediaHabitos = habitos.length ? habitos.reduce((s,h)=>s+consistenciaHabito(h),0)/habitos.length : null;
+  let progresso;
+  if(taxaTarefas===null && mediaHabitos===null) progresso = 0;
+  else if(taxaTarefas===null) progresso = mediaHabitos;
+  else if(mediaHabitos===null) progresso = taxaTarefas;
+  else progresso = (taxaTarefas+mediaHabitos)/2;
+  const totalItens = tarefas.length + habitos.length;
+  let diagnostico;
+  if(totalItens===0) diagnostico='Vazio';
+  else if(progresso>=90) diagnostico='Excelente';
+  else if(progresso>=70) diagnostico='Bom';
+  else if(progresso>=50) diagnostico='Regular';
+  else diagnostico='Crítico';
+  return {progresso, diagnostico, taxaTarefas, mediaHabitos, tarefas, habitos};
+}
+
+/* ---------- CRUD ---------- */
+function addProjeto(nome, descricao){
+  const p = {id:nextId(state.projetos), nome, descricao};
+  state.projetos.push(p); saveProjetos(); return p;
+}
+function editProjeto(id, nome, descricao){
+  const p = state.projetos.find(x=>x.id===id); if(!p) return;
+  if(nome) p.nome=nome; if(descricao) p.descricao=descricao; saveProjetos();
+}
+function deleteProjeto(id){
+  state.projetos = state.projetos.filter(p=>p.id!==id);
+  state.tarefas.forEach(t=>{ if(t.projetoId===id) t.projetoId=null; });
+  state.habitos.forEach(h=>{ if(h.projetoId===id) h.projetoId=null; });
+  saveProjetos(); saveTarefas(); saveHabitos();
+}
+function addTarefa(dados){
+  const t = {id:nextId(state.tarefas), titulo:dados.titulo, descricao:dados.descricao||'',
+    dataLimite:dados.dataLimite, concluida:false, dataCriacao:formatarData(hoje()),
+    dataConclusao:null, projetoId:dados.projetoId||null};
+  state.tarefas.push(t); saveTarefas(); return t;
+}
+function editTarefa(id, dados){
+  const t = state.tarefas.find(x=>x.id===id); if(!t) return;
+  if(dados.titulo) t.titulo=dados.titulo;
+  if(dados.descricao!==undefined && dados.descricao!=='') t.descricao=dados.descricao;
+  if(dados.dataLimite) t.dataLimite=dados.dataLimite;
+  t.projetoId = dados.projetoId!==undefined ? dados.projetoId : t.projetoId;
+  saveTarefas();
+}
+function concluirTarefa(id){
+  const t = state.tarefas.find(x=>x.id===id); if(!t) return;
+  t.concluida=true; t.dataConclusao=formatarData(hoje()); saveTarefas();
+}
+function deleteTarefa(id){ state.tarefas = state.tarefas.filter(t=>t.id!==id); saveTarefas(); }
+
+function addHabito(dados){
+  const h = {id:nextId(state.habitos), nome:dados.nome, frequencia:dados.frequencia,
+    contador:dados.contador||0, dataCriacao:formatarData(hoje()),
+    dataUltimaExecucao:dados.dataUltimaExecucao||null, projetoId:dados.projetoId||null};
+  state.habitos.push(h); saveHabitos(); return h;
+}
+function editHabito(id, dados){
+  const h = state.habitos.find(x=>x.id===id); if(!h) return;
+  if(dados.nome) h.nome=dados.nome;
+  if(dados.frequencia) h.frequencia=dados.frequencia;
+  h.projetoId = dados.projetoId!==undefined ? dados.projetoId : h.projetoId;
+  saveHabitos();
+}
+function registrarExecucao(id){
+  const h = state.habitos.find(x=>x.id===id); if(!h) return;
+  h.contador += 1; h.dataUltimaExecucao = formatarData(hoje()); saveHabitos();
+}
+function deleteHabito(id){ state.habitos = state.habitos.filter(h=>h.id!==id); saveHabitos(); }
+
+/* ============================= RENDER ============================= */
+const root = document.getElementById('app');
+
+function render(){
+  if(!state.loaded){ root.innerHTML = '<div style="color:#fff;padding:60px;text-align:center;font-family:sans-serif">Carregando…</div>'; return; }
+  root.innerHTML = state.view==='landing' ? renderLanding() : renderApp();
+  if(state.modal) root.insertAdjacentHTML('beforeend', renderModal());
+  if(state.toast) root.insertAdjacentHTML('beforeend', `<div class="toast">${state.toast}</div>`);
+  bindEvents();
+}
+
+function renderLanding(){
+  return `
+  <div class="landing">
+    <div class="topbar">
+      <div class="logo">Blueprint</div>
+      <button class="btn-pill" data-action="login">Login</button>
+    </div>
+    <div class="hero">
+      <h1>Projete o seu dia,<br>Construa a sua vida.</h1>
+      <div class="carousel-row">
+        <img src="assets/carrossel_4.jpg" alt="">
+        <img src="assets/carrossel_3.jpg" alt="">
+        <img src="assets/carrossel_1.jpg" alt="">
+        <img src="assets/carrossel_2.jpg" alt="">
+        <img src="assets/carrossel_6.jpg" alt="">
+      </div>
+    </div>
+    <div class="footer">
+      <div>
+        <h4>Blueprint</h4>
+        <small>Blueprint © Alguns Direitos Reservados.</small>
+      </div>
+      <div>
+        <h4>Contato</h4>
+        <p>+55 33 9999-9999</p>
+        <p>contato@blueprint.com</p>
+      </div>
+      <div>
+        <h4>Informações</h4>
+        <p>Sobre</p>
+        <p>Termos e condições</p>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderApp(){
+  const nome = state.usuario || 'Visitante';
+  return `
+  <div class="app-shell">
+    <div class="app-inner">
+      <div class="app-top">
+        <div class="logo" style="color:#fff">Blueprint</div>
+        <div class="user-chip">
+          <span>Olá, ${nome}</span>
+          <div class="burger" data-action="toggle-menu">
+            ☰
+            ${state.menuOpen ? `<div class="burger-menu">
+              <button data-action="logout">Sair</button>
+            </div>` : ''}
+          </div>
+        </div>
+      </div>
+
+      <div class="layout">
+        ${renderSidebar()}
+        <div>
+          <div class="nav-pills">
+            ${navPill('progresso','Progresso')}
+            ${navPill('projetos','Projetos')}
+            ${navPill('tarefas','Tarefas')}
+            ${navPill('habitos','Hábitos')}
+          </div>
+          <div class="main-card">
+            ${state.subview==='progresso' ? renderProgresso() : ''}
+            ${state.subview==='projetos' ? renderProjetosView() : ''}
+            ${state.subview==='tarefas' ? renderTarefasView() : ''}
+            ${state.subview==='habitos' ? renderHabitosView() : ''}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+function navPill(key,label){
+  return `<button class="nav-pill ${state.subview===key?'active':''}" data-action="subview" data-value="${key}">${label}</button>`;
+}
+
+function renderSidebar(){
+  const emChamas = state.habitos.filter(h=>statusHabito(h).status==='Em chamas').length;
+  const congelados = state.habitos.filter(h=>statusHabito(h).status==='Congelado').length;
+  const atrasadas = filtrarAtrasadas(state.tarefas).length;
+  return `
+  <div class="side">
+    <img class="profile-photo" src="assets/perfil.jpg" alt="Foto de perfil">
+    ${renderCalendar()}
+    <div class="stat-pill"><div class="stat-badge b-lime">${emChamas}</div> Hábitos em Chamas</div>
+    <div class="stat-pill"><div class="stat-badge b-teal">${congelados}</div> Hábitos Congelados</div>
+    <div class="stat-pill"><div class="stat-badge b-red">${atrasadas}</div> Tarefas Atrasadas</div>
+  </div>`;
+}
+
+const MESES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+const DOWS = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+function renderCalendar(){
+  const y = state.calYear, m = state.calMonth;
+  const first = new Date(y,m,1);
+  const startDow = first.getDay();
+  const daysInMonth = new Date(y,m+1,0).getDate();
+  const h = hoje();
+
+  const dueDays = new Set();
+  filtrarAtrasadas(state.tarefas).forEach(()=>{});
+  state.tarefas.forEach(t=>{
+    if(t.concluida) return;
+    const dl = parseData(t.dataLimite);
+    if(dl && dl.getFullYear()===y && dl.getMonth()===m) dueDays.add(dl.getDate());
+  });
+  const doneDays = new Set();
+  state.habitos.forEach(hb=>{
+    const du = parseData(hb.dataUltimaExecucao);
+    if(du && du.getFullYear()===y && du.getMonth()===m) doneDays.add(du.getDate());
+  });
+
+  let cells = '';
+  for(let i=0;i<startDow;i++) cells += `<div class="day empty">.</div>`;
+  for(let d=1; d<=daysInMonth; d++){
+    const cur = new Date(y,m,d);
+    let cls = 'day';
+    if(mesmoDia(cur,h)) cls+=' today';
+    else if(dueDays.has(d)) cls+=' due';
+    else if(doneDays.has(d)) cls+=' done';
+    cells += `<div class="${cls}">${d}</div>`;
+  }
+  return `
+  <div class="cal-card">
+    <div class="cal-head">
+      <button data-action="cal-prev">‹</button>
+      <span>${MESES[m]} ${y}</span>
+      <button data-action="cal-next">›</button>
+    </div>
+    <div class="cal-grid">
+      ${DOWS.map(d=>`<div class="dow">${d}</div>`).join('')}
+      ${cells}
+    </div>
+  </div>`;
+}
+
+/* ---- PROGRESSO ---- */
+function renderProgresso(){
+  const totalTarefas = state.tarefas.length;
+  const totalHabitos = state.habitos.length;
+  const totalProjetos = state.projetos.length;
+  const ativos = state.projetos.map(p=>({p, r:progressoProjeto(p)})).filter(x=>x.r.diagnostico!=='Vazio');
+  const media = ativos.length ? ativos.reduce((s,x)=>s+x.r.progresso,0)/ativos.length : 0;
+  const cats = {Excelente:[],Bom:[],Regular:[],'Crítico':[],Vazio:[]};
+  state.projetos.forEach(p=>{ const r = progressoProjeto(p); cats[r.diagnostico].push({p,r}); });
+
+  let diagGeral, diagClasse;
+  if(media>=80){ diagGeral='Sistêmico: você está gerenciando suas áreas com maestria.'; diagClasse='diag-excelente'; }
+  else if(cats['Crítico'].length > cats.Bom.length){ diagGeral='Alerta: muitas áreas da sua vida estão em estado crítico.'; diagClasse='diag-critico'; }
+  else { diagGeral='Equilibrado: continue mantendo o ritmo nos projetos principais.'; diagClasse='diag-bom'; }
+
+  return `
+  <h3 style="margin-top:0">Desempenho Sistêmico</h3>
+  <div class="kpi-row">
+    <div class="kpi"><div class="num">${totalProjetos}</div><div class="lbl">Projetos</div></div>
+    <div class="kpi"><div class="num">${totalTarefas}</div><div class="lbl">Tarefas</div></div>
+    <div class="kpi"><div class="num">${totalHabitos}</div><div class="lbl">Hábitos</div></div>
+    <div class="kpi"><div class="num">${media.toFixed(0)}%</div><div class="lbl">Progresso médio</div></div>
+  </div>
+  ${['Excelente','Bom','Regular','Crítico'].map(cat=>{
+    if(!cats[cat].length) return '';
+    return `<div class="cat-block"><h4>${cat}</h4>${cats[cat].map(x=>`
+      <div class="proj-bar"><span>${x.p.nome}</span><span>${x.r.progresso.toFixed(0)}%</span></div>
+    `).join('')}</div>`;
+  }).join('')}
+  <div class="diag-box ${diagClasse}">${diagGeral}</div>
+  `;
+}
+
+/* ---- PROJETOS ---- */
+function renderProjetosView(){
+  if(!state.projetos.length){
+    return `<div class="section-head"><h3 style="margin:0">Projetos</h3>
+      <button class="btn-blue" data-action="novo-projeto">+ Novo Projeto</button></div>
+      <div class="empty-state">Nenhum projeto cadastrado ainda.</div>`;
+  }
+  const pid = state.selectedProjetoId;
+  const proj = state.projetos.find(p=>p.id===pid) || state.projetos[0];
+  const r = progressoProjeto(proj);
+  const tarefas = r.tarefas, habitos = r.habitos;
+
+  // mini gráfico: tarefas por mês (dos últimos 6 meses de criação, ilustrativo)
+  const meses6 = [];
+  const base = new Date(); base.setDate(1);
+  for(let i=5;i>=0;i--){ const dt = new Date(base.getFullYear(), base.getMonth()-i, 1); meses6.push(dt); }
+  const contagens = meses6.map(dt=>tarefas.filter(t=>{
+    const dl = parseData(t.dataLimite);
+    return dl && dl.getFullYear()===dt.getFullYear() && dl.getMonth()===dt.getMonth();
+  }).length);
+  const maxC = Math.max(1,...contagens);
+
+  return `
+  <div class="selector-bar">
+    <select data-action="select-projeto">
+      ${state.projetos.map(p=>`<option value="${p.id}" ${p.id===proj.id?'selected':''}>${p.nome}</option>`).join('')}
+    </select>
+    <span style="color:var(--gray)">▾</span>
+  </div>
+  <div class="content-grid">
+    <div class="actions-col">
+      <button class="btn-blue" data-action="novo-projeto">Novo</button>
+      <button class="btn-blue" data-action="editar-projeto" data-id="${proj.id}">Editar</button>
+      <button class="btn-blue" data-action="excluir-projeto" data-id="${proj.id}">Excluir</button>
+      <button class="btn-blue" data-action="relatorio-projeto" data-id="${proj.id}">Relatório</button>
+
+      <div class="metrics-title">Métricas Visuais</div>
+      ${meses6.map((dt,i)=>`
+        <div class="bar-row">
+          <span class="lbl">${MESES[dt.getMonth()].slice(0,3)}</span>
+          <div class="bar-track"><div class="bar-fill" style="width:${(contagens[i]/maxC)*100}%"></div></div>
+          <span class="val">${contagens[i]}</span>
+        </div>`).join('')}
+    </div>
+    <div>
+      <p style="color:var(--ink-soft);margin-top:0">${proj.descricao || ''}</p>
+      <h4 style="margin:0 0 6px">Tarefas <span style="color:var(--gray);font-weight:400">(${tarefas.length})</span></h4>
+      <table>
+        <thead><tr><th>Tarefas</th><th>Data</th><th>Execução</th></tr></thead>
+        <tbody>
+          ${tarefas.length ? tarefas.map(t=>{
+            const atrasada = !t.concluida && parseData(t.dataLimite) && parseData(t.dataLimite) < hoje();
+            const statusTxt = t.concluida ? 'Realizada' : (atrasada ? 'Atrasada' : 'Pendente');
+            return `<tr class="${atrasada?'late':''}">
+              <td>${t.titulo}</td><td>${t.dataLimite}</td>
+              <td><span class="status-tag ${atrasada?'late':'ok'}">${statusTxt}</span></td>
+            </tr>`;
+          }).join('') : `<tr><td colspan="3" style="color:var(--gray)">Nenhuma tarefa neste projeto.</td></tr>`}
+        </tbody>
+      </table>
+
+      <h4 style="margin:22px 0 6px">Hábito <span style="color:var(--gray);font-weight:400">(${habitos.length})</span></h4>
+      <table>
+        <thead><tr><th>Habito</th><th>Frequência</th><th>Execução</th></tr></thead>
+        <tbody>
+          ${habitos.length ? habitos.map(hb=>{
+            const st = statusHabito(hb);
+            const dotClass = st.status==='Em chamas' ? 'fire' : (st.status==='Congelado' ? 'frozen' : 'progress');
+            return `<tr>
+              <td>${hb.nome}</td><td style="text-transform:capitalize">${hb.frequencia}</td>
+              <td><span class="exec-dot"><span class="dot ${dotClass}"></span>${st.status}</span></td>
+            </tr>`;
+          }).join('') : `<tr><td colspan="3" style="color:var(--gray)">Nenhum hábito neste projeto.</td></tr>`}
+        </tbody>
+      </table>
+    </div>
+  </div>`;
+}
+
+/* ---- TAREFAS ---- */
+function renderTarefasView(){
+  let lista = state.tarefas.slice();
+  if(state.filtro.trim()){
+    const termo = state.filtro.toLowerCase();
+    lista = lista.filter(t=>t.titulo.toLowerCase().includes(termo) || (t.descricao||'').toLowerCase().includes(termo));
+  }
+  if(state.filtroCategoria==='pendentes') lista = filtrarPendentes(lista);
+  if(state.filtroCategoria==='concluidas') lista = filtrarConcluidas(lista);
+  if(state.filtroCategoria==='atrasadas') lista = filtrarAtrasadas(lista);
+
+  return `
+  <div class="section-head">
+    <h3 style="margin:0">Tarefas</h3>
+    <button class="btn-blue" data-action="nova-tarefa">+ Nova Tarefa</button>
+  </div>
+  <div class="section-head">
+    <div class="search-box">🔎 <input type="text" placeholder="Buscar tarefa…" data-action="busca-tarefa" value="${state.filtro}"></div>
+    <div class="filter-chips">
+      ${chip('todas','Todas')}${chip('pendentes','Pendentes')}${chip('atrasadas','Atrasadas')}${chip('concluidas','Concluídas')}
+    </div>
+  </div>
+  <table>
+    <thead><tr><th>Título</th><th>Prazo</th><th>Projeto</th><th>Status</th><th></th></tr></thead>
+    <tbody>
+      ${lista.length ? lista.map(t=>{
+        const proj = state.projetos.find(p=>p.id===t.projetoId);
+        const atrasada = !t.concluida && parseData(t.dataLimite) && parseData(t.dataLimite) < hoje();
+        const statusTxt = t.concluida ? 'Concluída' : (atrasada ? 'Atrasada' : 'Pendente');
+        return `<tr class="${atrasada?'late':''}">
+          <td>${t.titulo}</td><td>${t.dataLimite}</td><td>${proj?proj.nome:'—'}</td>
+          <td><span class="status-tag ${atrasada?'late':'ok'}">${statusTxt}</span></td>
+          <td class="row-actions">
+            ${!t.concluida?`<button class="icon-btn" title="Concluir" data-action="concluir-tarefa" data-id="${t.id}">✓</button>`:''}
+            <button class="icon-btn" title="Editar" data-action="editar-tarefa" data-id="${t.id}">✎</button>
+            <button class="icon-btn danger" title="Excluir" data-action="excluir-tarefa" data-id="${t.id}">✕</button>
+          </td>
+        </tr>`;
+      }).join('') : `<tr><td colspan="5"><div class="empty-state">Nenhuma tarefa encontrada.</div></td></tr>`}
+    </tbody>
+  </table>`;
+}
+function chip(val,label){ return `<button class="chip ${state.filtroCategoria===val?'active':''}" data-action="filtro-categoria" data-value="${val}">${label}</button>`; }
+
+/* ---- HABITOS ---- */
+function renderHabitosView(){
+  let lista = state.habitos.slice();
+  if(state.filtro.trim()){
+    const termo = state.filtro.toLowerCase();
+    lista = lista.filter(h=>h.nome.toLowerCase().includes(termo));
+  }
+  return `
+  <div class="section-head">
+    <h3 style="margin:0">Hábitos</h3>
+    <button class="btn-blue" data-action="novo-habito">+ Novo Hábito</button>
+  </div>
+  <div class="search-box" style="margin-bottom:16px">🔎 <input type="text" placeholder="Buscar hábito…" data-action="busca-habito" value="${state.filtro}"></div>
+  <table>
+    <thead><tr><th>Nome</th><th>Frequência</th><th>Execuções</th><th>Status</th><th></th></tr></thead>
+    <tbody>
+      ${lista.length ? lista.map(h=>{
+        const st = statusHabito(h);
+        const dotClass = st.status==='Em chamas' ? 'fire' : (st.status==='Congelado' ? 'frozen' : 'progress');
+        const proj = state.projetos.find(p=>p.id===h.projetoId);
+        return `<tr>
+          <td>${h.nome}${proj?` <small style="color:var(--gray)">· ${proj.nome}</small>`:''}</td>
+          <td style="text-transform:capitalize">${h.frequencia}</td>
+          <td>${h.contador}</td>
+          <td><span class="exec-dot"><span class="dot ${dotClass}"></span>${st.status}</span></td>
+          <td class="row-actions">
+            <button class="icon-btn" title="Registrar execução" data-action="executar-habito" data-id="${h.id}">▶</button>
+            <button class="icon-btn" title="Editar" data-action="editar-habito" data-id="${h.id}">✎</button>
+            <button class="icon-btn danger" title="Excluir" data-action="excluir-habito" data-id="${h.id}">✕</button>
+          </td>
+        </tr>`;
+      }).join('') : `<tr><td colspan="5"><div class="empty-state">Nenhum hábito encontrado.</div></td></tr>`}
+    </tbody>
+  </table>`;
+}
+
+/* ---- MODAIS ---- */
+function optionsProjetos(selectedId){
+  return `<option value="">Sem projeto</option>` + state.projetos.map(p=>
+    `<option value="${p.id}" ${p.id===selectedId?'selected':''}>${p.nome}</option>`).join('');
+}
+function renderModal(){
+  const m = state.modal;
+  let body = '';
+  if(m.type==='login'){
+    body = `<h3>Bem-vindo(a) 👋</h3>
+      <div class="field"><label>Como podemos te chamar?</label><input id="f-nome" type="text" placeholder="Seu nome" value="${state.usuario||''}"></div>
+      <div class="modal-actions">
+        <button class="btn-primary" data-action="confirmar-login">Entrar</button>
+      </div>`;
+  }
+  if(m.type==='novo-projeto' || m.type==='editar-projeto'){
+    const p = m.type==='editar-projeto' ? state.projetos.find(x=>x.id===m.id) : null;
+    body = `<h3>${p?'Editar Projeto':'Novo Projeto'}</h3>
+      <div class="field"><label>Nome</label><input id="f-nome" type="text" value="${p?p.nome:''}" placeholder="Ex: Vida Saudável"></div>
+      <div class="field"><label>Descrição</label><textarea id="f-desc" rows="3" placeholder="Descreva o objetivo do projeto">${p?p.descricao:''}</textarea></div>
+      <div class="modal-actions">
+        <button class="btn-secondary" data-action="fechar-modal">Cancelar</button>
+        <button class="btn-primary" data-action="${p?'salvar-editar-projeto':'salvar-novo-projeto'}" data-id="${p?p.id:''}">Salvar</button>
+      </div>`;
+  }
+  if(m.type==='excluir-projeto'){
+    const p = state.projetos.find(x=>x.id===m.id);
+    body = `<h3>Excluir projeto</h3>
+      <p style="color:var(--ink-soft)">Tem certeza que deseja excluir <strong>${p.nome}</strong>? As tarefas e hábitos vinculados ficarão sem projeto.</p>
+      <div class="modal-actions">
+        <button class="btn-secondary" data-action="fechar-modal">Cancelar</button>
+        <button class="btn-primary" style="background:var(--red);color:#fff" data-action="confirmar-excluir-projeto" data-id="${p.id}">Excluir</button>
+      </div>`;
+  }
+  if(m.type==='nova-tarefa' || m.type==='editar-tarefa'){
+    const t = m.type==='editar-tarefa' ? state.tarefas.find(x=>x.id===m.id) : null;
+    body = `<h3>${t?'Editar Tarefa':'Nova Tarefa'}</h3>
+      <div class="field"><label>Título</label><input id="f-titulo" type="text" value="${t?t.titulo:''}" placeholder="Ex: Estudar Prolog"></div>
+      <div class="field"><label>Descrição</label><textarea id="f-desc" rows="2" placeholder="Detalhes da tarefa">${t?t.descricao:''}</textarea></div>
+      <div class="field"><label>Data limite (DD-MM-AAAA)</label><input id="f-data" type="text" value="${t?t.dataLimite:''}" placeholder="ex: 20-02-2026"></div>
+      <div class="field"><label>Projeto</label><select id="f-projeto">${optionsProjetos(t?t.projetoId:state.selectedProjetoId)}</select></div>
+      <div class="modal-actions">
+        <button class="btn-secondary" data-action="fechar-modal">Cancelar</button>
+        <button class="btn-primary" data-action="${t?'salvar-editar-tarefa':'salvar-nova-tarefa'}" data-id="${t?t.id:''}">Salvar</button>
+      </div>`;
+  }
+  if(m.type==='nova-habito' || m.type==='editar-habito'){
+    const h = m.type==='editar-habito' ? state.habitos.find(x=>x.id===m.id) : null;
+    body = `<h3>${h?'Editar Hábito':'Novo Hábito'}</h3>
+      <div class="field"><label>Nome</label><input id="f-nome" type="text" value="${h?h.nome:''}" placeholder="Ex: Beber 2L de água"></div>
+      <div class="field"><label>Frequência</label>
+        <select id="f-freq">
+          <option value="diario" ${h&&h.frequencia==='diario'?'selected':''}>Diário</option>
+          <option value="semanal" ${h&&h.frequencia==='semanal'?'selected':''}>Semanal</option>
+        </select>
+      </div>
+      ${!h?`<div class="field"><label>Contador inicial de execuções</label><input id="f-contador" type="number" min="0" value="0"></div>`:''}
+      <div class="field"><label>Projeto</label><select id="f-projeto">${optionsProjetos(h?h.projetoId:state.selectedProjetoId)}</select></div>
+      <div class="modal-actions">
+        <button class="btn-secondary" data-action="fechar-modal">Cancelar</button>
+        <button class="btn-primary" data-action="${h?'salvar-editar-habito':'salvar-novo-habito'}" data-id="${h?h.id:''}">Salvar</button>
+      </div>`;
+  }
+  if(m.type==='relatorio-projeto'){
+    const p = state.projetos.find(x=>x.id===m.id);
+    const r = progressoProjeto(p);
+    body = `<h3>Relatório — ${p.nome}</h3>
+      <p style="color:var(--ink-soft)">${p.descricao}</p>
+      <div class="kpi-row" style="margin-bottom:10px">
+        <div class="kpi"><div class="num">${r.progresso.toFixed(0)}%</div><div class="lbl">Progresso geral</div></div>
+        <div class="kpi"><div class="num">${r.diagnostico}</div><div class="lbl">Diagnóstico</div></div>
+      </div>
+      <p style="font-size:13px;color:var(--ink-soft)">Tarefas: ${r.tarefas.length} · Hábitos: ${r.habitos.length}</p>
+      <div class="modal-actions">
+        <button class="btn-secondary" data-action="fechar-modal">Fechar</button>
+        <button class="btn-primary" data-action="exportar-relatorio-projeto" data-id="${p.id}">Exportar .txt</button>
+      </div>`;
+  }
+  return `<div class="overlay" data-action="overlay-close">
+    <div class="modal" data-stop="1">${body}</div>
+  </div>`;
+}
+
+/* ============================= EVENTOS ============================= */
+function bindEvents(){
+  root.querySelectorAll('[data-action]').forEach(el=>{
+    el.addEventListener('click', onAction);
+  });
+  root.querySelectorAll('input[data-action="busca-tarefa"], input[data-action="busca-habito"]').forEach(el=>{
+    el.addEventListener('input', e=>{ state.filtro = e.target.value; render(); preserveFocus(el.dataset.action); });
+  });
+  const sel = root.querySelector('select[data-action="select-projeto"]');
+  if(sel) sel.addEventListener('change', e=>{ state.selectedProjetoId = Number(e.target.value); render(); });
+  const modalEl = root.querySelector('.modal');
+  if(modalEl) modalEl.addEventListener('click', e=>e.stopPropagation());
+}
+function preserveFocus(action){
+  const el = root.querySelector(`input[data-action="${action}"]`);
+  if(el){ el.focus(); const v=el.value; el.value=''; el.value=v; }
+}
+
+function onAction(e){
+  const el = e.currentTarget;
+  const action = el.dataset.action;
+  const id = el.dataset.id ? Number(el.dataset.id) : null;
+  const value = el.dataset.value;
+
+  if(action==='login'){ state.modal = {type:'login'}; render(); return; }
+  if(action==='confirmar-login'){
+    const nome = document.getElementById('f-nome').value.trim() || 'Visitante';
+    state.usuario = nome; saveUsuario();
+    state.modal = null; state.view='app'; render(); return;
+  }
+  if(action==='toggle-menu'){ state.menuOpen = !state.menuOpen; render(); return; }
+  if(action==='logout'){ state.view='landing'; state.menuOpen=false; render(); return; }
+  if(action==='subview'){ state.subview = value; state.filtro=''; state.filtroCategoria='todas'; render(); return; }
+  if(action==='cal-prev'){ state.calMonth--; if(state.calMonth<0){state.calMonth=11; state.calYear--;} render(); return; }
+  if(action==='cal-next'){ state.calMonth++; if(state.calMonth>11){state.calMonth=0; state.calYear++;} render(); return; }
+  if(action==='filtro-categoria'){ state.filtroCategoria = value; render(); return; }
+  if(action==='overlay-close'){ state.modal = null; render(); return; }
+  if(action==='fechar-modal'){ state.modal = null; render(); return; }
+
+  // Projetos
+  if(action==='novo-projeto'){ state.modal = {type:'novo-projeto'}; render(); return; }
+  if(action==='editar-projeto'){ state.modal = {type:'editar-projeto', id}; render(); return; }
+  if(action==='excluir-projeto'){ state.modal = {type:'excluir-projeto', id}; render(); return; }
+  if(action==='relatorio-projeto'){ state.modal = {type:'relatorio-projeto', id}; render(); return; }
+  if(action==='salvar-novo-projeto'){
+    const nome = document.getElementById('f-nome').value.trim();
+    const desc = document.getElementById('f-desc').value.trim();
+    if(!nome){ showToast('O nome do projeto não pode ser vazio.'); return; }
+    const p = addProjeto(nome, desc); state.selectedProjetoId = p.id;
+    state.modal = null; showToast('Projeto criado!'); return;
+  }
+  if(action==='salvar-editar-projeto'){
+    const nome = document.getElementById('f-nome').value.trim();
+    const desc = document.getElementById('f-desc').value.trim();
+    editProjeto(id, nome, desc); state.modal = null; showToast('Projeto atualizado!'); return;
+  }
+  if(action==='confirmar-excluir-projeto'){
+    deleteProjeto(id);
+    state.selectedProjetoId = state.projetos[0] ? state.projetos[0].id : null;
+    state.modal = null; showToast('Projeto removido.'); return;
+  }
+  if(action==='exportar-relatorio-projeto'){
+    const p = state.projetos.find(x=>x.id===id); const r = progressoProjeto(p);
+    const texto = `=== PROJETO: ${p.nome.toUpperCase()} ===\n\nDescrição: ${p.descricao}\nProgresso Geral: ${r.progresso.toFixed(1)}%\nDiagnóstico: ${r.diagnostico}\n\n[Tarefas] Total: ${r.tarefas.length}\n${r.tarefas.map(t=>`  - ${t.titulo} (Vence: ${t.dataLimite})`).join('\n')}\n\n[Hábitos] Total: ${r.habitos.length}\n${r.habitos.map(h=>`  - ${h.nome}: ${consistenciaHabito(h).toFixed(2)}% consistência`).join('\n')}`;
+    baixarTexto(texto, `relatorio_projeto_${p.id}.txt`);
+    return;
+  }
+
+  // Tarefas
+  if(action==='nova-tarefa'){ state.modal = {type:'nova-tarefa'}; render(); return; }
+  if(action==='editar-tarefa'){ state.modal = {type:'editar-tarefa', id}; render(); return; }
+  if(action==='concluir-tarefa'){ concluirTarefa(id); showToast('Tarefa concluída!'); return; }
+  if(action==='excluir-tarefa'){ deleteTarefa(id); showToast('Tarefa excluída.'); return; }
+  if(action==='salvar-nova-tarefa' || action==='salvar-editar-tarefa'){
+    const titulo = document.getElementById('f-titulo').value.trim();
+    const descricao = document.getElementById('f-desc').value.trim();
+    const dataLimite = document.getElementById('f-data').value.trim();
+    const projetoId = document.getElementById('f-projeto').value ? Number(document.getElementById('f-projeto').value) : null;
+    if(!titulo){ showToast('O título não pode ser vazio.'); return; }
+    if(!parseData(dataLimite)){ showToast('Data inválida. Use DD-MM-AAAA.'); return; }
+    if(action==='salvar-nova-tarefa') addTarefa({titulo,descricao,dataLimite,projetoId});
+    else editTarefa(id, {titulo,descricao,dataLimite,projetoId});
+    state.modal = null; showToast('Tarefa salva!'); return;
+  }
+
+  // Hábitos
+  if(action==='novo-habito'){ state.modal = {type:'nova-habito'}; render(); return; }
+  if(action==='editar-habito'){ state.modal = {type:'editar-habito', id}; render(); return; }
+  if(action==='executar-habito'){ registrarExecucao(id); showToast('Execução registrada!'); return; }
+  if(action==='excluir-habito'){ deleteHabito(id); showToast('Hábito excluído.'); return; }
+  if(action==='salvar-novo-habito' || action==='salvar-editar-habito'){
+    const nome = document.getElementById('f-nome').value.trim();
+    const frequencia = document.getElementById('f-freq').value;
+    const projetoId = document.getElementById('f-projeto').value ? Number(document.getElementById('f-projeto').value) : null;
+    if(!nome){ showToast('O nome não pode ser vazio.'); return; }
+    if(action==='salvar-novo-habito'){
+      const contador = Number(document.getElementById('f-contador').value)||0;
+      addHabito({nome,frequencia,contador,projetoId});
+    } else {
+      editHabito(id, {nome,frequencia,projetoId});
+    }
+    state.modal = null; showToast('Hábito salvo!'); return;
+  }
+}
+
+function baixarTexto(texto, nome){
+  const blob = new Blob([texto], {type:'text/plain;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = nome; a.click();
+  URL.revokeObjectURL(url);
+}
+
+/* ---------- boot ---------- */
+(async function init(){
+  await loadAll();
+  render();
+})();
+</script>
+</body>
+</html>
