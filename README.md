@@ -1,17 +1,21 @@
-# Projeto D: Gerenciador de Tarefas, Hábitos e Projetos
-> Projeto 1 desenvolvido durante as Semanas 4 e 5 do Onboarding LIPAI.
+# Gerenciador de Tarefas, Hábitos e Projetos
 
 ## Sobre o Projeto
 Este repositório contém a implementação de um sistema de linha de comando (CLI), desenvolvido em Python, para organização pessoal e gestão de produtividade.
 
-Diferente de listas de tarefas e hábitos comuns, foi implementado uma **Abordagem Sistêmica**: além de gerenciar tarefas pontuais e hábitos recorrentes, o sistema introduz a entidade **Projetos**. Os projetos atuam como agregadores (contextos), permitindo que o usuário vincule suas ações diárias a objetivos maiores, criando um mine ecossistema de planejamento.
+Diferente de listas de tarefas e hábitos comuns, foi implementado uma **Abordagem Sistêmica**: além de gerenciar tarefas pontuais e hábitos recorrentes, o sistema introduz a entidade **Projetos**. Os projetos atuam como agregadores (contextos), permitindo que o usuário vincule suas ações diárias a objetivos maiores, criando um mini ecossistema de planejamento.
 
-O projeto consolida os conhecimentos do treinamento prático de **Python e Lógica de Programação**, com ênfase em:
+O projeto consolida conhecimentos práticos de **Python e Lógica de Programação**, com ênfase em:
 
 * **Programação Orientada a Objetos (POO):** Classes, propriedades e encapsulamento.
 * **Relacionamento entre Objetos:** Implementação de relações 1:N (Um Projeto possui várias Tarefas/Hábitos).
 * **Modularização:** Arquitetura separada em camadas de Persistência, Modelagem, Visualização e Regras de Negócio (Relatórios).
 * **Persistência de Dados:** Manipulação robusta de arquivos .csv simulando um banco de dados relacional.
+
+## Demonstração (MVP Web)
+Para facilitar a visualização do funcionamento do sistema sem precisar rodar o projeto localmente, foi criado um MVP web que simula o uso da aplicação:
+
+🔗 **[https://gabrielhca.github.io/Gerenciador-de-Tarefas-e-Habitos/](https://gabrielhca.github.io/Gerenciador-de-Tarefas-e-Habitos/)**
 
 ## Funcionalidades
 O sistema oferece três pilares de gestão:
@@ -34,7 +38,7 @@ O sistema oferece três pilares de gestão:
 ## Estrutura do Projeto
 
 ```plaintext
-projeto-d/
+Gerenciador-de-Tarefas-e-Habitos/
 │
 ├── data/                      # Persistência de Dados (CSV)
 │   ├── projetos.csv           # Armazena os contextos (agregadores)
@@ -80,10 +84,7 @@ python main.py
 ```
 > **Nota:** Na primeira execução, o sistema criará automaticamente a pasta `data/` e os arquivos `.csv` necessários.
 
-## Contexto: LIPAI Onboarding
-Este projeto faz parte do treinamento do **Laboratório Interdisciplinar de Processamento e Análise de Imagens (LIPAI)**, vinculado à **FACOM/UFU**.
-
-**Conceitos Chave Aplicados:**
+## Conceitos Chave Aplicados
 
 * **Classes e Objetos:** Modelagem do mundo real.
 * **Persistência em Arquivo:** Leitura/Escrita e tratamento de exceções (try/except).
