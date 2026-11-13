@@ -1,13 +1,14 @@
 """ Módulo responsável pela persistência de dados (repositórios) de projetos. """
 
 from pathlib import Path
+from src.utils import PASTA_DADOS
 from src.models import Projeto
 
 
 class RepositorioProjetos:
     """ Gerencia a persistência e recuperação de projetos no arquivo CSV. """
 
-    ARQUIVO_CSV = "data/projetos.csv"
+    ARQUIVO_CSV = PASTA_DADOS / "projetos.csv"
 
     def __init__(self):
         """ Inicializa o repositório, carregando os projetos existentes. """
@@ -18,6 +19,7 @@ class RepositorioProjetos:
     def arquivo_existe(self):
         """ Verifica se o arquivo CSV existe; se não, cria com o cabeçalho. """
         arquivo_existe = Path(self.ARQUIVO_CSV).exists()
+        Path(self.ARQUIVO_CSV).parent.mkdir(parents=True, exist_ok=True)
         with open(self.ARQUIVO_CSV, mode="a", newline="", encoding="utf-8") as arquivo:
             if not arquivo_existe:
                 arquivo.write("id;nome;descricao\n")

@@ -3,13 +3,13 @@
 from pathlib import Path
 from datetime import date
 from src.models import Tarefa
-from src.utils import formatar_data, formatar_data_para_string
+from src.utils import PASTA_DADOS, formatar_data, formatar_data_para_string
 
 
 class RepositorioTarefas():
     """ Gerencia a persistência e recuperação de tarefas no arquivo CSV. """
 
-    ARQUIVO_CSV = "data/tarefas.csv"
+    ARQUIVO_CSV = PASTA_DADOS / "tarefas.csv"
 
     def __init__(self):
         """ Inicializa o repositório, carregando os dados existentes. """
@@ -20,6 +20,7 @@ class RepositorioTarefas():
     def arquivo_existe(self):
         """ Verifica se o arquivo CSV existe; se não, cria com o cabeçalho. """
         arquivo_existe = Path(self.ARQUIVO_CSV).exists()
+        Path(self.ARQUIVO_CSV).parent.mkdir(parents=True, exist_ok=True)
         with open(self.ARQUIVO_CSV, mode="a", newline="", encoding="utf-8") as arquivo:
             if not arquivo_existe:
                 arquivo.write(

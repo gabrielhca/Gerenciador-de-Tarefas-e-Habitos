@@ -2,6 +2,11 @@
 
 import os
 from datetime import datetime
+from pathlib import Path
+
+PASTA_RAIZ = Path(__file__).resolve().parent.parent
+PASTA_DADOS = PASTA_RAIZ / "data"
+PASTA_RELATORIOS = PASTA_RAIZ / "relatorios"
 
 
 def formatar_data(data_str):
@@ -24,7 +29,7 @@ def formatar_data_para_string(data):
 def exportar_relatorio(texto, nome_arquivo):
     """ Exporta um texto para um arquivo de texto. """
 
-    pasta = "relatorios"
+    pasta = PASTA_RELATORIOS
     if not os.path.exists(pasta):
         os.makedirs(pasta)
     caminho_arquivo = os.path.join(pasta, nome_arquivo)

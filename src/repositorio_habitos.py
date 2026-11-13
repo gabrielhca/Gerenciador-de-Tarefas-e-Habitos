@@ -3,13 +3,13 @@
 from pathlib import Path
 from datetime import date
 from src.models import Habito
-from src.utils import formatar_data_para_string
+from src.utils import PASTA_DADOS, formatar_data_para_string
 
 
 class RepositorioHabitos():
     """ Gerencia a persistência e recuperação de hábitos no arquivo CSV. """
 
-    ARQUIVO_CSV = "data/habitos.csv"
+    ARQUIVO_CSV = PASTA_DADOS / "habitos.csv"
 
     def __init__(self):
         """ Inicializa o repositório, carregando os dados existentes. """
@@ -20,6 +20,7 @@ class RepositorioHabitos():
     def arquivo_existe(self):
         """ Verifica se o arquivo CSV existe; se não, cria com o cabeçalho. """
         arquivo_existe = Path(self.ARQUIVO_CSV).exists()
+        Path(self.ARQUIVO_CSV).parent.mkdir(parents=True, exist_ok=True)
         with open(self.ARQUIVO_CSV, mode="a", newline="", encoding="utf-8") as arquivo:
             if not arquivo_existe:
                 arquivo.write(
