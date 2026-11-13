@@ -246,30 +246,17 @@
 <script>
 /* =========================================================
    BLUEPRINT — MVP funcional
-   Persistência: window.storage (artifact) com fallback para
-   localStorage quando executado fora do ambiente Claude.
+   Persistência: localStorage do navegador.
 ========================================================= */
 
 const Storage = {
   async get(key){
     try{
-      if (typeof window.storage !== 'undefined' && window.storage){
-        const r = await window.storage.get(key);
-        return r ? JSON.parse(r.value) : null;
-      }
-    }catch(e){ /* chave inexistente ou storage indisponível */ }
-    try{
       const v = localStorage.getItem(key);
       return v ? JSON.parse(v) : null;
-    }catch(e){ return null; }
+    }catch(e){ return null; /* storage bloqueado ou dado inválido */ }
   },
   async set(key, value){
-    try{
-      if (typeof window.storage !== 'undefined' && window.storage){
-        await window.storage.set(key, JSON.stringify(value));
-        return;
-      }
-    }catch(e){}
     try{ localStorage.setItem(key, JSON.stringify(value)); }catch(e){}
   }
 };
