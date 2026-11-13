@@ -1,11 +1,20 @@
-""" Módulo responsável pela interface de usuário (visualizações) para tarefas e hábitos. """
+"""Módulo responsável pela interface de usuário (visualizações) para tarefas e hábitos."""
 
-from src.utils import formatar_data, formatar_data_para_string, exportar_relatorio
-from src.relatorio_habitos import verificar_status_habito, calcular_consistencia_habito, calcular_execucoes_esperadas
+from src.relatorio_habitos import (
+    calcular_consistencia_habito,
+    calcular_execucoes_esperadas,
+    verificar_status_habito,
+)
+from src.utils import (
+    exportar_relatorio,
+    formatar_data,
+    formatar_data_para_string,
+    normalizar_frequencia,
+)
 
 
 def exibir_dados(dados, tipo):
-    """ Exibe a lista de tarefas ou hábitos. """
+    """Exibe a lista de tarefas ou hábitos."""
     if not dados:
         print("Nenhuma informação cadastrada.")
         return
@@ -14,35 +23,49 @@ def exibir_dados(dados, tipo):
         print(item)
 
 
-def preencher_dados_projeto():
-    """ Solicita ao usuário os dados para criar um novo projeto. """
+def ler_texto(mensagem):
+    """Pede um texto ao usuário, recusando ';' (é o separador usado nos arquivos CSV)."""
     while True:
-        nome = input("Nome do projeto: ")
-        if nome.strip():
-            break
-        print("O nome do projeto não pode ser vazio.")
-    descricao = input("Descrição do projeto: ")
+        texto = input(mensagem).strip()
+        if ";" not in texto:
+            return texto
+        print("O caractere ';' não é permitido. Tente novamente.")
+
+
+def ler_texto_obrigatorio(mensagem):
+    """Pede um texto ao usuário até que ele não seja vazio."""
+    while True:
+        texto = ler_texto(mensagem)
+        if texto:
+            return texto
+        print("Este campo não pode ser vazio.")
+
+
+def preencher_dados_projeto():
+    """Solicita ao usuário os dados para criar um novo projeto."""
+    nome = ler_texto_obrigatorio("Nome do projeto: ")
+    descricao = ler_texto("Descrição do projeto: ")
     return nome, descricao
 
 
 def editar_dados_projeto(projeto):
-    """ Solicita novos dados para um projeto, mantendo o atual se vazio. """
+    """Solicita novos dados para um projeto, mantendo o atual se vazio."""
     print(f"Editando: {projeto.nome}")
-    novo_nome = input("Novo nome (enter para manter): ")
-    nova_desc = input("Nova descrição (enter para manter): ")
+    novo_nome = ler_texto("Novo nome (enter para manter): ")
+    nova_desc = ler_texto("Nova descrição (enter para manter): ")
     return novo_nome, nova_desc
 
 
 def preencher_dados_tarefa(repo_projetos=None):
-    """ Solicita ao usuário os dados para criar uma nova tarefa. """
-    titulo = input("Título da tarefa: ")
-    descricao = input("Descrição da tarefa: ")
+    """Solicita ao usuário os dados para criar uma nova tarefa."""
+    titulo = ler_texto_obrigatorio("Título da tarefa: ")
+    descricao = ler_texto("Descrição da tarefa: ")
 
     while True:
         data_limite = input("Data limite (DD-MM-AAAA): ")
         if formatar_data(data_limite):
             break
-            
+
     projeto_id = None
     if repo_projetos:
         print("\nDeseja associar a um projeto? (Caso não, deixe vazio)")
@@ -53,17 +76,17 @@ def preencher_dados_tarefa(repo_projetos=None):
                 projeto_id = int(pid)
             except ValueError:
                 print("ID inválido, seguindo sem projeto.")
-    
+
     return titulo, descricao, data_limite, projeto_id
 
 
 def editar_dados_tarefa(tarefa):
-    """ Solicita novos dados para uma tarefa, mantendo o atual se vazio. """
+    """Solicita novos dados para uma tarefa, mantendo o atual se vazio."""
     print(f"Editando Tarefa: {tarefa.titulo}")
     print("Deixe em branco para manter o valor atual.")
 
-    titulo = input(f"Novo título ({tarefa.titulo}): ")
-    descricao = input(f"Nova descrição ({tarefa.descricao}): ")
+    titulo = ler_texto(f"Novo título ({tarefa.titulo}): ")
+    descricao = ler_texto(f"Nova descrição ({tarefa.descricao}): ")
 
     while True:
         data_limite_str = formatar_data_para_string(tarefa.data_limite)
@@ -77,21 +100,32 @@ def editar_dados_tarefa(tarefa):
 
 
 def editar_dados_habito(habito):
-    """ Solicita novos dados para um hábito, mantendo o atual se vazio. """
+    """Solicita novos dados para um hábito, mantendo o atual se vazio."""
     print(f"Editando Hábito: {habito.nome}")
     print("Deixe em branco para manter o valor atual.")
 
-    nome = input(f"Novo nome ({habito.nome}): ")
-    frequencia = input(f"Nova frequência ({habito.frequencia}): ")
+    nome = ler_texto(f"Novo nome ({habito.nome}): ")
+    while True:
+        frequencia = input(f"Nova frequência ({habito.frequencia}): ").strip()
+        if not frequencia:
+            break
+        frequencia = normalizar_frequencia(frequencia)
+        if frequencia:
+            break
+        print("Frequência inválida. Digite 'diário' ou 'semanal'.")
 
     return nome, frequencia
 
 
 def preencher_dados_habito(repo_projetos=None):
-    """ Solicita ao usuário os dados para criar um novo hábito. """
-    nome = input("Nome do hábito: ")
-    frequencia = input("Frequência (diario, semanal): ")
-    
+    """Solicita ao usuário os dados para criar um novo hábito."""
+    nome = ler_texto_obrigatorio("Nome do hábito: ")
+    while True:
+        frequencia = normalizar_frequencia(input("Frequência (diário ou semanal): "))
+        if frequencia:
+            break
+        print("Frequência inválida. Digite 'diário' ou 'semanal'.")
+
     while True:
         try:
             contador_execucoes = int(input("Contador de execuções inicial: "))
@@ -107,7 +141,7 @@ def preencher_dados_habito(repo_projetos=None):
             data_ultima = formatar_data(data_str)
             if data_ultima:
                 break
-    
+
     projeto_id = None
     if repo_projetos:
         print("\nDeseja associar a um projeto? (Caso não, deixe vazio)")
@@ -123,18 +157,19 @@ def preencher_dados_habito(repo_projetos=None):
 
 
 def solicitar_termo_busca():
-    """ Solicita ao usuário um termo para pesquisa. """
+    """Solicita ao usuário um termo para pesquisa."""
     return input("Informe o termo de busca (ou '0' para voltar):").strip()
 
+
 def solicitar_id(dados):
-    """ Solicita ao usuário um ID válido de tarefa ou hábito. """
+    """Solicita ao usuário um ID válido de tarefa ou hábito."""
     if not dados:
         return None
 
     while True:
         try:
             entrada = input("Informe o ID (ou '0' para voltar): ")
-            if entrada == '0':
+            if entrada == "0":
                 return None
             id_item = int(entrada)
 
@@ -145,12 +180,13 @@ def solicitar_id(dados):
         except ValueError:
             print("Por favor, insira um número válido.")
 
+
 def formatar_relatorio_tarefas(relatorio):
-    """ Gera uma string formatada com os dados do relatório de tarefas. """
+    """Gera uma string formatada com os dados do relatório de tarefas."""
 
     if not relatorio:
         return "Nenhum dado de relatório disponível."
-    
+
     m = relatorio["metricas"]
     linhas = []
     linhas.append("=== RELATÓRIO DE TAREFAS ===\n")
@@ -159,7 +195,7 @@ def formatar_relatorio_tarefas(relatorio):
     linhas.append(f"Pendentes: {m['tarefas_pendentes']}")
     linhas.append(f"Atrasadas: {m['tarefas_atrasadas']}")
     linhas.append(f"Pontualidade: {m['taxa_pontualidade_percentual']:.2f}%")
-    
+
     linhas.append("\n--- Detalhes por Categoria ---")
     for categoria, lista_tarefas in relatorio["prazos"].items():
         linhas.append(f"- {categoria}: {len(lista_tarefas)} tarefas")
@@ -169,15 +205,15 @@ def formatar_relatorio_tarefas(relatorio):
             for t in lista_tarefas:
                 data_str = formatar_data_para_string(t.data_limite)
                 linhas.append(f"  - {t.titulo} (Vence: {data_str})")
-    
+
     linhas.append("\nDiagnóstico:")
     linhas.append(relatorio["diagnostico"])
-    
+
     return "\n".join(linhas)
 
 
 def exibir_relatorio_tarefas(relatorio):
-    """ Exibe o relatório e pergunta se deseja salvar. """
+    """Exibe o relatório e pergunta se deseja salvar."""
 
     texto_relatorio = formatar_relatorio_tarefas(relatorio)
     print(texto_relatorio)
@@ -185,12 +221,13 @@ def exibir_relatorio_tarefas(relatorio):
     if salvar == "s":
         exportar_relatorio(texto_relatorio, "relatorio_tarefas.txt")
 
+
 def formatar_relatorio_habitos(relatorio):
-    """ Gera uma string formatada com os dados do relatório de hábitos. """
+    """Gera uma string formatada com os dados do relatório de hábitos."""
 
     if not relatorio:
         return "Nenhum dado de relatório disponível."
-    
+
     m = relatorio["metricas"]
     linhas = []
     linhas.append("=== RELATÓRIO DE HABITOS ===\n")
@@ -198,22 +235,25 @@ def formatar_relatorio_habitos(relatorio):
     linhas.append(f"Em chamas: {m['habitos_em_chamas']} (Ativos)")
     linhas.append(f"Congelados: {m['habitos_congelados']} (Inativos)")
     linhas.append(f"Consistência Média: {m['consistencia_media']:.2f}%")
-    
+
     linhas.append("\n--- Status dos Hábitos ---")
     for status, lista_dados in relatorio["detalhes"].items():
         if lista_dados:
             linhas.append(f"\n[{status.upper()}]")
             for d in lista_dados:
-                linhas.append(f"  - {d['nome']}: {d['consistencia']:.2f}% consistência"
-                              f"({d['execucoes_reais']}/{d['execucoes_esperadas']} execuções)")
-    
+                linhas.append(
+                    f"  - {d['nome']}: {d['consistencia']:.2f}% consistência"
+                    f"({d['execucoes_reais']}/{d['execucoes_esperadas']} execuções)"
+                )
+
     linhas.append("\nDiagnóstico:")
     linhas.append(relatorio["diagnostico"])
-    
+
     return "\n".join(linhas)
 
+
 def exibir_relatorio_habitos(relatorio):
-    """" Exibe o relatório e pergunta se deseja salvar. """
+    """ " Exibe o relatório e pergunta se deseja salvar."""
 
     texto_relatorio = formatar_relatorio_habitos(relatorio)
     print(texto_relatorio)
@@ -224,7 +264,7 @@ def exibir_relatorio_habitos(relatorio):
 
 
 def exibir_status_habitos(lista_habitos):
-    """ Exibe uma lista com o status de cada hábito. """
+    """Exibe uma lista com o status de cada hábito."""
     if not lista_habitos:
         print("Nenhum hábito cadastrado.")
         return
@@ -234,63 +274,68 @@ def exibir_status_habitos(lista_habitos):
         status, dias = verificar_status_habito(habito)
         print(f"[{status}] {habito.nome} - Dias sem fazer: {dias}")
 
+
 def formatar_relatorio_projeto_individual(dados):
-    """ Gera string formatada para o relatório de um único projeto. """
+    """Gera string formatada para o relatório de um único projeto."""
     p = dados["projeto"]
     m = dados["metricas"]
     tarefas = dados.get("tarefas", [])
     habitos = dados.get("habitos", [])
-    
+
     linhas = []
     linhas.append(f"=== PROJETO: {p.nome.upper()} ===\n")
     linhas.append(f"Descrição: {p.descricao}")
     linhas.append(f"Progresso Geral: {dados['progresso_geral']:.1f}%")
     linhas.append(f"Diagnóstico: {dados['diagnostico']}")
-    
+
     linhas.append("\n[Tarefas]")
     linhas.append(f"Total: {m['tarefas_total']}")
-    if m['tarefas_total'] > 0:
+    if m["tarefas_total"] > 0:
         linhas.append(f"Conclusão: {m['tarefas_conclusao']:.1f}%")
         for t in tarefas:
             data_str = formatar_data_para_string(t.data_limite)
             linhas.append(f"  - {t.titulo} (Vence: {data_str})")
-    
+
     linhas.append("\n[Hábitos]")
     linhas.append(f"Total: {m['habitos_total']}")
-    if m['habitos_total'] > 0:
+    if m["habitos_total"] > 0:
         linhas.append(f"Consistência Média: {m['habitos_consistencia']:.1f}%")
         for h in habitos:
             consistencia = calcular_consistencia_habito(h)
             esperadas = calcular_execucoes_esperadas(h)
-            linhas.append(f"  - {h.nome}: {consistencia:.2f}% consistência({h.contador_execucoes}/{esperadas} execuções)")
-        
+            linhas.append(
+                f"  - {h.nome}: {consistencia:.2f}% consistência({h.contador_execucoes}/{esperadas} execuções)"
+            )
+
     return "\n".join(linhas)
 
+
 def exibir_relatorio_projeto(dados):
-    """ Exibe o relatório individual e oferece exportação. """
+    """Exibe o relatório individual e oferece exportação."""
     texto = formatar_relatorio_projeto_individual(dados)
     print("\n" + texto)
-    
+
     salvar = input("\nDeseja exportar este relatório? (s/n): ").lower()
     if salvar == "s":
         nome_arq = f"relatorio_projeto_{dados['projeto'].id}.txt"
         exportar_relatorio(texto, nome_arq)
 
+
 def formatar_relatorio_geral_projetos(relatorio):
-    """ Gera string formatada para o desempenho sistêmico (todos os projetos). """
+    """Gera string formatada para o desempenho sistêmico (todos os projetos)."""
     if not relatorio:
         return "Nenhum projeto cadastrado."
-        
+
     m = relatorio["metricas"]
     cats = relatorio["categorias"]
-    
+
     linhas = []
     linhas.append("=== DESEMPENHO SISTÊMICO (PROJETOS) ===\n")
     linhas.append(f"Total de Projetos: {m['total_projetos']}")
     linhas.append(f"Média Global de Progresso: {m['media_global']:.1f}%\n")
-    
+
     linhas.append("--- Detalhamento por Categoria ---")
-    
+
     ordem = ["Excelente", "Bom", "Regular", "Crítico", "Vazio"]
     for categoria in ordem:
         lista = cats.get(categoria, [])
@@ -300,17 +345,18 @@ def formatar_relatorio_geral_projetos(relatorio):
                 p = item["projeto"]
                 prog = item["progresso_geral"]
                 linhas.append(f"  - {p.nome}: {prog:.1f}%")
-    
+
     linhas.append("\n=== DIAGNÓSTICO GERAL ===")
     linhas.append(relatorio["diagnostico_geral"])
-    
+
     return "\n".join(linhas)
 
+
 def exibir_relatorio_geral_projetos(relatorio):
-    """ Exibe o relatório geral e oferece exportação. """
+    """Exibe o relatório geral e oferece exportação."""
     texto = formatar_relatorio_geral_projetos(relatorio)
     print("\n" + texto)
-    
+
     salvar = input("\nDeseja exportar este relatório? (s/n): ").lower()
     if salvar == "s":
         exportar_relatorio(texto, "desempenho_projetos.txt")

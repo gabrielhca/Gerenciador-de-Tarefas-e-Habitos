@@ -1,34 +1,37 @@
-""" Módulo responsável pela persistência de dados (repositórios) de tarefas. """
+"""Módulo responsável pela persistência de dados (repositórios) de tarefas."""
 
-from pathlib import Path
 from datetime import date
+from pathlib import Path
+
 from src.models import Tarefa
-from src.utils import formatar_data, formatar_data_para_string
+from src.utils import PASTA_DADOS, formatar_data, formatar_data_para_string
 
 
-class RepositorioTarefas():
-    """ Gerencia a persistência e recuperação de tarefas no arquivo CSV. """
+class RepositorioTarefas:
+    """Gerencia a persistência e recuperação de tarefas no arquivo CSV."""
 
-    ARQUIVO_CSV = "data/tarefas.csv"
+    ARQUIVO_CSV = PASTA_DADOS / "tarefas.csv"
 
     def __init__(self):
-        """ Inicializa o repositório, carregando os dados existentes. """
+        """Inicializa o repositório, carregando os dados existentes."""
         self.lista_tarefas = []
         self.ultimo_id = 0
         self.carrega_dados_csv()
 
     def arquivo_existe(self):
-        """ Verifica se o arquivo CSV existe; se não, cria com o cabeçalho. """
+        """Verifica se o arquivo CSV existe; se não, cria com o cabeçalho."""
         arquivo_existe = Path(self.ARQUIVO_CSV).exists()
+        Path(self.ARQUIVO_CSV).parent.mkdir(parents=True, exist_ok=True)
         with open(self.ARQUIVO_CSV, mode="a", newline="", encoding="utf-8") as arquivo:
             if not arquivo_existe:
                 arquivo.write(
-                    "id;titulo;descricao;data_limite;concluida;data_criacao;data_conclusao;projeto_id\n")
+                    "id;titulo;descricao;data_limite;concluida;data_criacao;data_conclusao;projeto_id\n"
+                )
 
     def carrega_dados_csv(self):
-        """ Lê os dados do arquivo CSV e popula a lista de tarefas. """
+        """Lê os dados do arquivo CSV e popula a lista de tarefas."""
         try:
-            with open(self.ARQUIVO_CSV, mode="r", encoding='utf-8') as arquivo:
+            with open(self.ARQUIVO_CSV, encoding="utf-8") as arquivo:
                 next(arquivo)
                 for linha in arquivo:
                     if not linha.strip():
@@ -41,7 +44,7 @@ class RepositorioTarefas():
             self.arquivo_existe()
 
     def salvar_dados_csv(self, titulo, descricao, data_limite_str, projeto_id=None):
-        """ Adiciona uma nova tarefa ao arquivo CSV. """
+        """Adiciona uma nova tarefa ao arquivo CSV."""
         self.arquivo_existe()
         concluida = False
 
@@ -52,42 +55,48 @@ class RepositorioTarefas():
         projeto_id_str = str(projeto_id) if projeto_id else ""
         data_limite = formatar_data(data_limite_str)
 
+        # Cria o objeto antes de gravar: se os dados forem inválidos, nada vai para o CSV
+        nova_tarefa = Tarefa(
+            self.ultimo_id + 1,
+            titulo,
+            descricao,
+            data_limite,
+            concluida,
+            data_criacao,
+            data_conclusao,
+            projeto_id,
+        )
+
         with open(self.ARQUIVO_CSV, mode="a", newline="", encoding="utf-8") as arquivo:
             self.ultimo_id += 1
             concluida_str = "1" if concluida else "0"
             arquivo.write(
-                f"{self.ultimo_id};{titulo};{descricao};{data_limite_str};{concluida_str};{data_criacao_str};{data_conclusao_str};{projeto_id_str}\n")
-            nova_tarefa = Tarefa(
-                self.ultimo_id,
-                titulo,
-                descricao,
-                data_limite,
-                concluida,
-                data_criacao,
-                data_conclusao,
-                projeto_id
+                f"{self.ultimo_id};{titulo};{descricao};{data_limite_str};{concluida_str};{data_criacao_str};{data_conclusao_str};{projeto_id_str}\n"
             )
             self.lista_tarefas.append(nova_tarefa)
 
     def salvar_arquivo_completo(self):
-        """ Reescreve o CSV inteiro com o estado atual das tarefas, garantindo a integridade dos dados. """
+        """Reescreve o CSV inteiro com o estado atual das tarefas, garantindo a integridade dos dados."""
         with open(self.ARQUIVO_CSV, mode="w", newline="", encoding="utf-8") as arquivo:
             arquivo.write(
-                "id;titulo;descricao;data_limite;concluida;data_criacao;data_conclusao;projeto_id\n")
+                "id;titulo;descricao;data_limite;concluida;data_criacao;data_conclusao;projeto_id\n"
+            )
             for tarefa in self.lista_tarefas:
-
                 data_limite_str = formatar_data_para_string(tarefa.data_limite)
-                data_criacao_str = formatar_data_para_string(
-                    tarefa.data_criacao)
-                data_conclusao_str = formatar_data_para_string(
-                    tarefa.data_conclusao) if tarefa.data_conclusao else ""
+                data_criacao_str = formatar_data_para_string(tarefa.data_criacao)
+                data_conclusao_str = (
+                    formatar_data_para_string(tarefa.data_conclusao)
+                    if tarefa.data_conclusao
+                    else ""
+                )
                 concluida_str = "1" if tarefa.concluida else "0"
                 projeto_id_str = str(tarefa.projeto_id) if tarefa.projeto_id else ""
                 arquivo.write(
-                    f"{tarefa.id};{tarefa.titulo};{tarefa.descricao};{data_limite_str};{concluida_str};{data_criacao_str};{data_conclusao_str};{projeto_id_str}\n")
+                    f"{tarefa.id};{tarefa.titulo};{tarefa.descricao};{data_limite_str};{concluida_str};{data_criacao_str};{data_conclusao_str};{projeto_id_str}\n"
+                )
 
     def marcar_tarefa_concluida(self, tarefa_id):
-        """ Marca uma tarefa como concluída. """
+        """Marca uma tarefa como concluída."""
         for tarefa in self.lista_tarefas:
             if tarefa.id == tarefa_id:
                 tarefa.concluida = True
@@ -96,7 +105,7 @@ class RepositorioTarefas():
                 return tarefa
 
     def excluir_tarefa(self, tarefa_id):
-        """ Excluir uma tarefa do repositório. """
+        """Excluir uma tarefa do repositório."""
         for tarefa in self.lista_tarefas:
             if tarefa.id == tarefa_id:
                 self.lista_tarefas.remove(tarefa)
@@ -104,7 +113,7 @@ class RepositorioTarefas():
                 return tarefa
 
     def editar_tarefa(self, tarefa_id, titulo=None, descricao=None, data_limite=None):
-        """ Edita os dados de uma tarefa existente. """
+        """Edita os dados de uma tarefa existente."""
         for tarefa in self.lista_tarefas:
             if tarefa.id == tarefa_id:
                 if titulo:
@@ -116,7 +125,22 @@ class RepositorioTarefas():
                 self.salvar_arquivo_completo()
                 return tarefa
 
+    def desvincular_projeto(self, projeto_id):
+        """Remove o vínculo dos tarefas com um projeto excluído. Retorna quantos foram alterados."""
+        alterados = 0
+        for tarefa in self.lista_tarefas:
+            if tarefa.projeto_id == projeto_id:
+                tarefa.projeto_id = None
+                alterados += 1
+        if alterados:
+            self.salvar_arquivo_completo()
+        return alterados
+
     def buscar_por_texto(self, termo):
-        """ Filtra as tarefas que contém o termo no título ou descrição. """
+        """Filtra as tarefas que contém o termo no título ou descrição."""
         termo = termo.lower()
-        return [t for t in self.lista_tarefas if termo in t.titulo.lower() or termo in t.descricao.lower()]
+        return [
+            t
+            for t in self.lista_tarefas
+            if termo in t.titulo.lower() or termo in t.descricao.lower()
+        ]

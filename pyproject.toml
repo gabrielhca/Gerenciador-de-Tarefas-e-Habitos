@@ -1,0 +1,25 @@
+[project]
+name = "gerenciador-tarefas-habitos"
+version = "1.0.0"
+description = "Gerenciador de projetos, tarefas e hábitos em linha de comando."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = []
+
+[tool.ruff]
+line-length = 100
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.2.0",
+    "ruff>=0.17.5",
+]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+# Linhas longas restantes são strings que o formatador não quebra sozinho
+ignore = ["E501"]

@@ -1,14 +1,15 @@
-""" Estrutura de dados das tarefas, hábitos e projetos. """
+"""Estrutura de dados das tarefas, hábitos e projetos."""
 
-from src.utils import formatar_data_para_string, formatar_data
 from datetime import date
+
+from src.utils import formatar_data, formatar_data_para_string
 
 
 class Projeto:
-    """ Constrói um contento ou objetivo maior que agrupa tarefas e hábitos. """
+    """Constrói um contento ou objetivo maior que agrupa tarefas e hábitos."""
 
     def __init__(self, projeto_id, nome, descricao):
-        """ Inicializa um novo projeto. """
+        """Inicializa um novo projeto."""
         self.id = projeto_id
         self.nome = nome
         self.descricao = descricao
@@ -19,14 +20,14 @@ class Projeto:
 
     @nome.setter
     def nome(self, valor):
-        """ Define o nome, rejeita nomes vazios. """
+        """Define o nome, rejeita nomes vazios."""
         if not valor or not isinstance(valor, str) or not valor.strip():
             raise ValueError("O nome do projeto não pode ser vazio.")
         self._nome = valor
 
     @classmethod
     def from_csv(cls, linha):
-        """ Cria uma instância de Projeto a partir de uma linha CSV. """
+        """Cria uma instância de Projeto a partir de uma linha CSV."""
 
         partes = linha.strip().split(";")
         projeto_id = int(partes[0])
@@ -45,10 +46,20 @@ class Projeto:
 
 
 class Tarefa:
-    """ Constrói uma tarefa vinculada ou não a um projeto. """
+    """Constrói uma tarefa vinculada ou não a um projeto."""
 
-    def __init__(self, tarefa_id, titulo, descricao, data_limite, concluida=False, data_criacao=None, data_conclusao=None, projeto_id=None):
-        """ Inicializa uma nova tarefa. """
+    def __init__(
+        self,
+        tarefa_id,
+        titulo,
+        descricao,
+        data_limite,
+        concluida=False,
+        data_criacao=None,
+        data_conclusao=None,
+        projeto_id=None,
+    ):
+        """Inicializa uma nova tarefa."""
         self.id = tarefa_id
         self.titulo = titulo
         self.descricao = descricao
@@ -64,14 +75,14 @@ class Tarefa:
 
     @titulo.setter
     def titulo(self, valor):
-        """ Define o título, ma rejeita títulos vazios. """
+        """Define o título, ma rejeita títulos vazios."""
         if not valor or not isinstance(valor, str) or not valor.strip():
             raise ValueError("O título da tarefa não pode ser vazio.")
         self._titulo = valor
 
     @classmethod
     def from_csv(cls, linha):
-        """ Cria uma instância de Tarefa a partir de uma linha CSV. """
+        """Cria uma instância de Tarefa a partir de uma linha CSV."""
 
         partes = linha.strip().split(";")
         tarefa_id = int(partes[0])
@@ -97,7 +108,16 @@ class Tarefa:
         else:
             projeto_id = None
 
-        return cls(tarefa_id, titulo, descricao, data_limite, status_conclusao, data_criacao, data_conclusao, projeto_id)
+        return cls(
+            tarefa_id,
+            titulo,
+            descricao,
+            data_limite,
+            status_conclusao,
+            data_criacao,
+            data_conclusao,
+            projeto_id,
+        )
 
     def __eq__(self, outro):
         if isinstance(outro, Tarefa):
@@ -119,10 +139,19 @@ class Tarefa:
 
 
 class Habito:
-    """ Constrói um hábito vinculado ou não a um projeto. """
+    """Constrói um hábito vinculado ou não a um projeto."""
 
-    def __init__(self, habito_id, nome, frequencia, contador_execucoes=0, data_criacao=None, data_ultima_execucao=None, projeto_id=None):
-        """ Inicializa um novo hábito. """
+    def __init__(
+        self,
+        habito_id,
+        nome,
+        frequencia,
+        contador_execucoes=0,
+        data_criacao=None,
+        data_ultima_execucao=None,
+        projeto_id=None,
+    ):
+        """Inicializa um novo hábito."""
         self.id = habito_id
         self.nome = nome
         self.frequencia = frequencia
@@ -137,7 +166,7 @@ class Habito:
 
     @nome.setter
     def nome(self, valor):
-        """ Define o nome, rejeita nomes vazios. """
+        """Define o nome, rejeita nomes vazios."""
         if not valor or not isinstance(valor, str) or not valor.strip():
             raise ValueError("O nome do hábito não pode ser vazio.")
         self._nome = valor
@@ -148,14 +177,14 @@ class Habito:
 
     @frequencia.setter
     def frequencia(self, valor):
-        """ Define a frequência, rejeita frequências vazias. """
+        """Define a frequência, rejeita frequências vazias."""
         if not valor or not isinstance(valor, str) or not valor.strip():
             raise ValueError("A frequência do hábito não pode ser vazia.")
         self._frequencia = valor
 
     @classmethod
     def from_csv(cls, linha):
-        """ Cria uma instância de Habito a partir de uma linha CSV. """
+        """Cria uma instância de Habito a partir de uma linha CSV."""
 
         partes = linha.strip().split(";")
         habito_id = int(partes[0])
@@ -183,7 +212,15 @@ class Habito:
         else:
             projeto_id = None
 
-        return cls(habito_id, nome, frequencia, contador_execucoes, data_criacao, data_ultima_execucao, projeto_id)
+        return cls(
+            habito_id,
+            nome,
+            frequencia,
+            contador_execucoes,
+            data_criacao,
+            data_ultima_execucao,
+            projeto_id,
+        )
 
     def __eq__(self, outro):
         if isinstance(outro, Habito):

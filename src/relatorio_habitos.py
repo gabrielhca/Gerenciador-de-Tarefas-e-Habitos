@@ -1,12 +1,15 @@
-""" Módulo responsável pela geração de relatórios de hábitos. """
+"""Módulo responsável pela geração de relatórios de hábitos."""
 
 from datetime import date
+
+from src.utils import normalizar_frequencia
 
 STATUS_ATIVO = "Em chamas"
 STATUS_INATIVO = "Congelado"
 
+
 def calcular_execucoes_esperadas(habito):
-    """ Calcula o número de execuções esperadas desde a criação do hábito. """
+    """Calcula o número de execuções esperadas desde a criação do hábito."""
     if not habito.data_criacao:
         return 0
 
@@ -16,15 +19,15 @@ def calcular_execucoes_esperadas(habito):
     if dias_desde_criacao < 0:
         dias_desde_criacao = 0
 
-    if "diario" in habito.frequencia.lower():
+    if normalizar_frequencia(habito.frequencia) == "diario":
         return dias_desde_criacao + 1
-    elif "semanal" in habito.frequencia.lower():
+    elif normalizar_frequencia(habito.frequencia) == "semanal":
         return (dias_desde_criacao // 7) + 1
     return 0
 
 
 def calcular_consistencia_habito(habito):
-    """ Calcula a porcentagem de consistência de um único hábito. """
+    """Calcula a porcentagem de consistência de um único hábito."""
     esperadas = calcular_execucoes_esperadas(habito)
     if esperadas == 0:
         return 0.0
@@ -33,7 +36,7 @@ def calcular_consistencia_habito(habito):
 
 
 def verificar_status_habito(habito):
-    """ Verifica o status da atividade com base na última execução. """
+    """Verifica o status da atividade com base na última execução."""
 
     if not habito.data_ultima_execucao:
         dias_sem_fazer = (date.today() - habito.data_criacao).days
@@ -47,7 +50,7 @@ def verificar_status_habito(habito):
     status = "Indefinido"
 
     # Lógica para hábitos diários
-    if "diario" in habito.frequencia.lower():
+    if normalizar_frequencia(habito.frequencia) == "diario":
         if dias_sem_fazer == 0:
             status = STATUS_ATIVO
         elif dias_sem_fazer == 1:
@@ -58,7 +61,7 @@ def verificar_status_habito(habito):
             status = STATUS_INATIVO
 
     # Lógica para hábitos semanais
-    elif "semanal" in habito.frequencia.lower():
+    elif normalizar_frequencia(habito.frequencia) == "semanal":
         if dias_sem_fazer <= 7:
             status = STATUS_ATIVO
         elif dias_sem_fazer <= 14:
@@ -69,7 +72,7 @@ def verificar_status_habito(habito):
 
 
 def gerar_desempenho_habitos(lista_habitos):
-    """ Gera um relatório de desempenho para uma lista de hábitos. """
+    """Gera um relatório de desempenho para uma lista de hábitos."""
 
     if not lista_habitos:
         return None
@@ -80,7 +83,7 @@ def gerar_desempenho_habitos(lista_habitos):
         "Atenção": [],
         STATUS_INATIVO: [],
         "Indefinido": [],
-        "Nunca realizado": []
+        "Nunca realizado": [],
     }
 
     soma_consistencia = 0
@@ -104,7 +107,7 @@ def gerar_desempenho_habitos(lista_habitos):
             "execucoes_reais": habito.contador_execucoes,
             "execucoes_esperadas": esperadas,
             "consistencia": consistencia,
-            "dias_sem_fazer": dias_sem_fazer
+            "dias_sem_fazer": dias_sem_fazer,
         }
         if status in detalhes:
             detalhes[status].append(dados)
@@ -128,10 +131,10 @@ def gerar_desempenho_habitos(lista_habitos):
             "total_habitos": total,
             "consistencia_media": consistencia_media,
             "habitos_em_chamas": quantidade_em_chamas,
-            "habitos_congelados": quantidade_congelados
+            "habitos_congelados": quantidade_congelados,
         },
         "detalhes": detalhes,
-        "diagnostico": diagnostico
+        "diagnostico": diagnostico,
     }
 
     return relatorio

@@ -1,4 +1,7 @@
 __pycache__/
-#/relatorios
-#/data/*.csv
+.venv/
+.pytest_cache/
+.ruff_cache/
 
+# Relatórios gerados pelo app
+relatorios/
