@@ -119,6 +119,17 @@ class RepositorioTarefas():
                 self.salvar_arquivo_completo()
                 return tarefa
 
+    def desvincular_projeto(self, projeto_id):
+        """ Remove o vínculo dos tarefas com um projeto excluído. Retorna quantos foram alterados. """
+        alterados = 0
+        for tarefa in self.lista_tarefas:
+            if tarefa.projeto_id == projeto_id:
+                tarefa.projeto_id = None
+                alterados += 1
+        if alterados:
+            self.salvar_arquivo_completo()
+        return alterados
+
     def buscar_por_texto(self, termo):
         """ Filtra as tarefas que contém o termo no título ou descrição. """
         termo = termo.lower()

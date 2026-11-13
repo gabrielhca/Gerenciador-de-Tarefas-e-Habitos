@@ -196,7 +196,7 @@ def relatorios_habitos(repositorio):
     else:
         print("Opção inválida.")
 
-def gerenciar_projetos(repo_p):
+def gerenciar_projetos(repo_p, repo_t, repo_h):
     """ CRUD de Projetos: Focado apenas na gestão dos dados. """
     print("\n-- Gerenciar Projetos --")
     print("1. Cadastrar Projeto")
@@ -230,7 +230,11 @@ def gerenciar_projetos(repo_p):
         selecionado = solicitar_id(resultados)
         if selecionado:
             repo_p.excluir_projeto(selecionado.id)
+            tarefas = repo_t.desvincular_projeto(selecionado.id)
+            habitos = repo_h.desvincular_projeto(selecionado.id)
             print("Projeto removido.")
+            if tarefas or habitos:
+                print(f"{tarefas} tarefa(s) e {habitos} hábito(s) ficaram sem projeto.")
             
     elif opcao == '4':
         return
@@ -288,7 +292,7 @@ def main():
         escolha = input("Escolha uma opção: ")
 
         if escolha == '1':
-            gerenciar_projetos(repo_projetos)
+            gerenciar_projetos(repo_projetos, repo_tarefas, repo_habitos)
         elif escolha == '2':
             relatorios_projetos(repo_projetos, repo_tarefas, repo_habitos)
         elif escolha == '3':

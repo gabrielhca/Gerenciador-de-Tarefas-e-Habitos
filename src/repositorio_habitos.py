@@ -103,6 +103,17 @@ class RepositorioHabitos():
                 self.salvar_arquivo_completo()
                 return habito
 
+    def desvincular_projeto(self, projeto_id):
+        """ Remove o vínculo dos hábitos com um projeto excluído. Retorna quantos foram alterados. """
+        alterados = 0
+        for habito in self.lista_habitos:
+            if habito.projeto_id == projeto_id:
+                habito.projeto_id = None
+                alterados += 1
+        if alterados:
+            self.salvar_arquivo_completo()
+        return alterados
+
     def buscar_por_texto(self, termo):
         """ Filtra os habitos que contém o termo no nome. """
         termo = termo.lower()
