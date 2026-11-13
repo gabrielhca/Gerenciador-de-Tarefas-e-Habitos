@@ -14,10 +14,19 @@ def exibir_dados(dados, tipo):
         print(item)
 
 
+def ler_texto(mensagem):
+    """ Pede um texto ao usuário, recusando ';' (é o separador usado nos arquivos CSV). """
+    while True:
+        texto = input(mensagem).strip()
+        if ";" not in texto:
+            return texto
+        print("O caractere ';' não é permitido. Tente novamente.")
+
+
 def ler_texto_obrigatorio(mensagem):
     """ Pede um texto ao usuário até que ele não seja vazio. """
     while True:
-        texto = input(mensagem).strip()
+        texto = ler_texto(mensagem)
         if texto:
             return texto
         print("Este campo não pode ser vazio.")
@@ -26,22 +35,22 @@ def ler_texto_obrigatorio(mensagem):
 def preencher_dados_projeto():
     """ Solicita ao usuário os dados para criar um novo projeto. """
     nome = ler_texto_obrigatorio("Nome do projeto: ")
-    descricao = input("Descrição do projeto: ")
+    descricao = ler_texto("Descrição do projeto: ")
     return nome, descricao
 
 
 def editar_dados_projeto(projeto):
     """ Solicita novos dados para um projeto, mantendo o atual se vazio. """
     print(f"Editando: {projeto.nome}")
-    novo_nome = input("Novo nome (enter para manter): ")
-    nova_desc = input("Nova descrição (enter para manter): ")
+    novo_nome = ler_texto("Novo nome (enter para manter): ")
+    nova_desc = ler_texto("Nova descrição (enter para manter): ")
     return novo_nome, nova_desc
 
 
 def preencher_dados_tarefa(repo_projetos=None):
     """ Solicita ao usuário os dados para criar uma nova tarefa. """
     titulo = ler_texto_obrigatorio("Título da tarefa: ")
-    descricao = input("Descrição da tarefa: ")
+    descricao = ler_texto("Descrição da tarefa: ")
 
     while True:
         data_limite = input("Data limite (DD-MM-AAAA): ")
@@ -67,8 +76,8 @@ def editar_dados_tarefa(tarefa):
     print(f"Editando Tarefa: {tarefa.titulo}")
     print("Deixe em branco para manter o valor atual.")
 
-    titulo = input(f"Novo título ({tarefa.titulo}): ")
-    descricao = input(f"Nova descrição ({tarefa.descricao}): ")
+    titulo = ler_texto(f"Novo título ({tarefa.titulo}): ")
+    descricao = ler_texto(f"Nova descrição ({tarefa.descricao}): ")
 
     while True:
         data_limite_str = formatar_data_para_string(tarefa.data_limite)
@@ -86,7 +95,7 @@ def editar_dados_habito(habito):
     print(f"Editando Hábito: {habito.nome}")
     print("Deixe em branco para manter o valor atual.")
 
-    nome = input(f"Novo nome ({habito.nome}): ")
+    nome = ler_texto(f"Novo nome ({habito.nome}): ")
     while True:
         frequencia = input(f"Nova frequência ({habito.frequencia}): ").strip()
         if not frequencia:
