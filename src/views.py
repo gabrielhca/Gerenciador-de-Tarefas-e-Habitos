@@ -1,6 +1,6 @@
 """ Módulo responsável pela interface de usuário (visualizações) para tarefas e hábitos. """
 
-from src.utils import formatar_data, formatar_data_para_string, exportar_relatorio
+from src.utils import formatar_data, formatar_data_para_string, exportar_relatorio, normalizar_frequencia
 from src.relatorio_habitos import verificar_status_habito, calcular_consistencia_habito, calcular_execucoes_esperadas
 
 
@@ -87,7 +87,14 @@ def editar_dados_habito(habito):
     print("Deixe em branco para manter o valor atual.")
 
     nome = input(f"Novo nome ({habito.nome}): ")
-    frequencia = input(f"Nova frequência ({habito.frequencia}): ")
+    while True:
+        frequencia = input(f"Nova frequência ({habito.frequencia}): ").strip()
+        if not frequencia:
+            break
+        frequencia = normalizar_frequencia(frequencia)
+        if frequencia:
+            break
+        print("Frequência inválida. Digite 'diário' ou 'semanal'.")
 
     return nome, frequencia
 
@@ -95,7 +102,11 @@ def editar_dados_habito(habito):
 def preencher_dados_habito(repo_projetos=None):
     """ Solicita ao usuário os dados para criar um novo hábito. """
     nome = ler_texto_obrigatorio("Nome do hábito: ")
-    frequencia = input("Frequência (diario, semanal): ")
+    while True:
+        frequencia = normalizar_frequencia(input("Frequência (diário ou semanal): "))
+        if frequencia:
+            break
+        print("Frequência inválida. Digite 'diário' ou 'semanal'.")
     
     while True:
         try:

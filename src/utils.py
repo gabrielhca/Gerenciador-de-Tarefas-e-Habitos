@@ -1,6 +1,7 @@
 """ Guarda funções utilitárias. """
 
 import os
+import unicodedata
 from datetime import datetime
 from pathlib import Path
 
@@ -16,6 +17,22 @@ def formatar_data(data_str):
     except ValueError:
         print("Formato de data invalido. Use DD-MM-AAAA.")
         return None
+
+
+def normalizar_frequencia(texto):
+    """ Converte variações como 'Diário', 'diária' ou 'semana' para 'diario' ou 'semanal'.
+
+    Retorna None se a frequência não for reconhecida.
+    """
+    if not texto:
+        return None
+    sem_acento = unicodedata.normalize("NFKD", texto).encode("ascii", "ignore").decode()
+    sem_acento = sem_acento.strip().lower()
+    if sem_acento.startswith("diari"):
+        return "diario"
+    if sem_acento.startswith("semana"):
+        return "semanal"
+    return None
 
 
 def formatar_data_para_string(data):

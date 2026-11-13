@@ -1,6 +1,7 @@
 """ Módulo responsável pela geração de relatórios de hábitos. """
 
 from datetime import date
+from src.utils import normalizar_frequencia
 
 STATUS_ATIVO = "Em chamas"
 STATUS_INATIVO = "Congelado"
@@ -16,9 +17,9 @@ def calcular_execucoes_esperadas(habito):
     if dias_desde_criacao < 0:
         dias_desde_criacao = 0
 
-    if "diario" in habito.frequencia.lower():
+    if normalizar_frequencia(habito.frequencia) == "diario":
         return dias_desde_criacao + 1
-    elif "semanal" in habito.frequencia.lower():
+    elif normalizar_frequencia(habito.frequencia) == "semanal":
         return (dias_desde_criacao // 7) + 1
     return 0
 
@@ -47,7 +48,7 @@ def verificar_status_habito(habito):
     status = "Indefinido"
 
     # Lógica para hábitos diários
-    if "diario" in habito.frequencia.lower():
+    if normalizar_frequencia(habito.frequencia) == "diario":
         if dias_sem_fazer == 0:
             status = STATUS_ATIVO
         elif dias_sem_fazer == 1:
@@ -58,7 +59,7 @@ def verificar_status_habito(habito):
             status = STATUS_INATIVO
 
     # Lógica para hábitos semanais
-    elif "semanal" in habito.frequencia.lower():
+    elif normalizar_frequencia(habito.frequencia) == "semanal":
         if dias_sem_fazer <= 7:
             status = STATUS_ATIVO
         elif dias_sem_fazer <= 14:
