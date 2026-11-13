@@ -1,92 +1,72 @@
 # Gerenciador de Tarefas, Hábitos e Projetos
 
-## Sobre o Projeto
-Este repositório contém a implementação de um sistema de linha de comando (CLI), desenvolvido em Python, para organização pessoal e gestão de produtividade.
+Programa de terminal em Python para organizar tarefas, hábitos e projetos, com relatórios de progresso salvos em arquivos CSV.
 
-Diferente de listas de tarefas e hábitos comuns, foi implementado uma **Abordagem Sistêmica**: além de gerenciar tarefas pontuais e hábitos recorrentes, o sistema introduz a entidade **Projetos**. Os projetos atuam como agregadores (contextos), permitindo que o usuário vincule suas ações diárias a objetivos maiores, criando um mini ecossistema de planejamento.
+**Versão web para testar no navegador:** https://gabrielhca.github.io/Gerenciador-de-Tarefas-e-Habitos/
 
-O projeto consolida conhecimentos práticos de **Python e Lógica de Programação**, com ênfase em:
+## Como rodar
 
-* **Programação Orientada a Objetos (POO):** Classes, propriedades e encapsulamento.
-* **Relacionamento entre Objetos:** Implementação de relações 1:N (Um Projeto possui várias Tarefas/Hábitos).
-* **Modularização:** Arquitetura separada em camadas de Persistência, Modelagem, Visualização e Regras de Negócio (Relatórios).
-* **Persistência de Dados:** Manipulação robusta de arquivos .csv simulando um banco de dados relacional.
+Pré-requisito: Python 3.10 ou mais recente. O programa só usa a biblioteca padrão.
 
-## Demonstração (MVP Web)
-Para facilitar a visualização do funcionamento do sistema sem precisar rodar o projeto localmente, foi criado um MVP web que simula o uso da aplicação:
-
-🔗 **[https://gabrielhca.github.io/Gerenciador-de-Tarefas-e-Habitos/](https://gabrielhca.github.io/Gerenciador-de-Tarefas-e-Habitos/)**
-
-## Funcionalidades
-O sistema oferece três pilares de gestão:
-
-### Gestão de Projetos (Contextos)
-* **Visão Sistêmica:** Criação de áreas de foco (ex: "Faculdade", "Vida Saudável") que agrupam itens.
-* **Relatórios Integrados:** Diagnóstico automático que cruza o progresso das tarefas com a consistência dos hábitos daquele projeto.
-* **Ranking de Desempenho:** Análise comparativa para identificar quais áreas da vida estão "Em Chamas" e quais estão "Críticas".
-
-### Gestão de Tarefas
-* **CRUD Completo:** Cadastro, edição, exclusão e conclusão de tarefas.
-* **Vínculo Opcional:** Tarefas podem ser "soltas" ou pertencer a um Projeto específico.
-* **Análise de Prazos:** Categorização automática em Atrasadas, Urgentes, Próximas e Futuras.
-
-### Gestão de Hábitos
-* **Rastreamento de Frequência:** Suporte a hábitos diários e semanais.
-* **Gamificação:** Status dinâmicos ("Em chamas", "Congelado", "Em dia") baseados na última execução.
-* **Vínculo Opcional:** Hábitos podem contribuir para o progresso de um Projeto específico.
-
-## Estrutura do Projeto
-
-```plaintext
-Gerenciador-de-Tarefas-e-Habitos/
-│
-├── data/                      # Persistência de Dados (CSV)
-│   ├── projetos.csv           # Armazena os contextos (agregadores)
-│   ├── tarefas.csv            # Armazena tarefas (com chave estrangeira projeto_id)
-│   └── habitos.csv            # Armazena hábitos (com chave estrangeira projeto_id)
-│
-├── relatorios/                # Saída de Dados
-│   └── *.txt                  # Relatórios exportados pelo sistema
-│
-├── src/                       # Código Fonte Modularizado
-│   ├── models.py              # Classes: Projeto, Tarefa, Habito
-│   ├── views.py               # Interface: Inputs e Prints formatados
-│   ├── utils.py               # Utilitários: Formatação de datas e exportação
-│   │
-│   ├── repositorio_projetos.py # CRUD e persistência de Projetos
-│   ├── repositorio_tarefas.py  # CRUD e persistência de Tarefas
-│   ├── repositorio_habitos.py  # CRUD e persistência de Hábitos
-│   │
-│   ├── relatorio_projetos.py   # Lógica de Diagnóstico Sistêmico e Ranking
-│   ├── relatorio_tarefas.py    # Lógica de Prazos e Taxa de Conclusão
-│   └── relatorio_habitos.py    # Lógica de Consistência e Status
-│
-├── main.py                    # Orquestrador Principal (Menus e Fluxo)
-└── README.md                  # Documentação do Projeto
-```
-
-## Como Executar
-**Pré-requisitos:** Python 3.x instalado.
-
-1. Clone o repositório:
 ```bash
 git clone https://github.com/gabrielhca/Gerenciador-de-Tarefas-e-Habitos.git
-```
-
-2. Navegue até a pasta do projeto:
-```bash
 cd Gerenciador-de-Tarefas-e-Habitos
+python3 main.py
 ```
 
-3. Execute o arquivo principal:
+O repositório já vem com dados de exemplo em `data/`. Se essa pasta não existir, o programa cria a pasta e os arquivos `.csv` na primeira execução. Os relatórios exportados vão para `relatorios/`.
+
+### Testes e lint
+
+Para os testes e o lint é preciso o [uv](https://docs.astral.sh/uv/):
+
 ```bash
-python main.py
+uv sync               # instala pytest e Ruff
+uv run pytest         # roda os testes
+uv run ruff check .   # verifica o código
 ```
-> **Nota:** Na primeira execução, o sistema criará automaticamente a pasta `data/` e os arquivos `.csv` necessários.
 
-## Conceitos Chave Aplicados
+## Funcionalidades
 
-* **Classes e Objetos:** Modelagem do mundo real.
-* **Persistência em Arquivo:** Leitura/Escrita e tratamento de exceções (try/except).
-* **Design de Software:** Separação de responsabilidades (MVC simplificado).
-* **Interconexão:** Uso de IDs para relacionar entidades diferentes, permitindo análises complexas a partir de dados simples.
+- **Projetos:** agrupam tarefas e hábitos de uma mesma área (ex.: "Faculdade", "Vida Saudável"). O relatório de cada projeto junta a conclusão das tarefas com a consistência dos hábitos e classifica o projeto como Excelente, Bom, Regular ou Crítico.
+- **Tarefas:** cadastro, edição, conclusão e exclusão. As pendentes são separadas em atrasadas, urgentes, próximas e futuras, e o relatório mostra a taxa de conclusão e a pontualidade.
+- **Hábitos:** diários ou semanais, com contador de execuções. O status muda conforme a última execução ("Em chamas", "Em dia", "Atenção", "Congelado").
+- **Relatórios:** podem ser exportados em `.txt`.
+
+## Estrutura
+
+```plaintext
+├── data/                     # CSVs com os dados (projetos, tarefas, hábitos)
+├── docs/                     # MVP web publicado no GitHub Pages
+├── src/
+│   ├── models.py             # Classes Projeto, Tarefa e Habito
+│   ├── repositorio_*.py      # Leitura e gravação de cada CSV
+│   ├── relatorio_*.py        # Cálculos dos relatórios
+│   ├── views.py              # Entradas e saídas no terminal
+│   └── utils.py              # Datas, caminhos e exportação
+├── tests/                    # Testes com pytest
+└── main.py                   # Menus e fluxo principal
+```
+
+## Tecnologias
+
+- Python 3 (biblioteca padrão: `datetime`, `pathlib`)
+- Arquivos CSV como armazenamento
+- pytest para testes e Ruff para lint e formatação, gerenciados com uv
+- HTML, CSS e JavaScript puro no MVP web
+
+## O que aprendi
+
+Esse foi o projeto em que eu realmente usei orientação a objetos. Cada entidade virou uma classe, e usei `@property` para validar os dados na hora de criar o objeto: uma tarefa sem título, por exemplo, nem chega a existir. Também usei `@classmethod` para montar o objeto direto de uma linha do CSV, o que deixou a leitura dos arquivos bem mais limpa.
+
+Separar o código em camadas me ajudou muito. Os repositórios só leem e gravam arquivos, os relatórios só fazem contas e a `views.py` só conversa com o usuário. Quando precisei mudar um cálculo, mexi em um lugar só, e deu para testar os relatórios sem abrir o menu.
+
+Usar CSV como "banco de dados" me ensinou na prática por que bancos existem. Troquei o separador de `,` para `;` porque as descrições tinham vírgula, tive que tratar linha vazia e data em formato errado, e percebi que excluir um projeto deixava tarefas apontando para um ID que não existia mais. São problemas pequenos, mas me mostraram o que é integridade de dados.
+
+Também aprendi a ter cuidado com coisas que parecem detalhe: datas (`datetime` e formatos), caminhos de arquivo (troquei `os.path` por `pathlib` e passei a montar os caminhos a partir da pasta do projeto) e entrada do usuário, como alguém digitar "diária" com acento quando o código esperava "diario".
+
+Por fim, fiz uma versão web simples em JavaScript para quem quiser ver o sistema sem instalar Python. Precisei reescrever as mesmas regras em outra linguagem, e isso me fez entender melhor a lógica que eu tinha criado.
+
+## Estado atual
+
+Concluído. O programa de terminal e o MVP web estão funcionando.
