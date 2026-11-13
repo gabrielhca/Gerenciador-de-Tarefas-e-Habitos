@@ -41,16 +41,26 @@ def test_consistencia_parcial():
 
 
 def test_status_diario():
-    assert verificar_status_habito(criar_habito("diario", 30, 1, dias_sem_fazer=0))[0] == "Em chamas"
+    assert (
+        verificar_status_habito(criar_habito("diario", 30, 1, dias_sem_fazer=0))[0] == "Em chamas"
+    )
     assert verificar_status_habito(criar_habito("diario", 30, 1, dias_sem_fazer=1))[0] == "Em dia"
     assert verificar_status_habito(criar_habito("diario", 30, 1, dias_sem_fazer=3))[0] == "Atenção"
-    assert verificar_status_habito(criar_habito("diario", 30, 1, dias_sem_fazer=4))[0] == "Congelado"
+    assert (
+        verificar_status_habito(criar_habito("diario", 30, 1, dias_sem_fazer=4))[0] == "Congelado"
+    )
 
 
 def test_status_semanal():
-    assert verificar_status_habito(criar_habito("semanal", 60, 1, dias_sem_fazer=7))[0] == "Em chamas"
-    assert verificar_status_habito(criar_habito("semanal", 60, 1, dias_sem_fazer=10))[0] == "Atenção"
-    assert verificar_status_habito(criar_habito("semanal", 60, 1, dias_sem_fazer=15))[0] == "Congelado"
+    assert (
+        verificar_status_habito(criar_habito("semanal", 60, 1, dias_sem_fazer=7))[0] == "Em chamas"
+    )
+    assert (
+        verificar_status_habito(criar_habito("semanal", 60, 1, dias_sem_fazer=10))[0] == "Atenção"
+    )
+    assert (
+        verificar_status_habito(criar_habito("semanal", 60, 1, dias_sem_fazer=15))[0] == "Congelado"
+    )
 
 
 def test_status_nunca_realizado():

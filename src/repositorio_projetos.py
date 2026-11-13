@@ -1,23 +1,24 @@
-""" Módulo responsável pela persistência de dados (repositórios) de projetos. """
+"""Módulo responsável pela persistência de dados (repositórios) de projetos."""
 
 from pathlib import Path
-from src.utils import PASTA_DADOS
+
 from src.models import Projeto
+from src.utils import PASTA_DADOS
 
 
 class RepositorioProjetos:
-    """ Gerencia a persistência e recuperação de projetos no arquivo CSV. """
+    """Gerencia a persistência e recuperação de projetos no arquivo CSV."""
 
     ARQUIVO_CSV = PASTA_DADOS / "projetos.csv"
 
     def __init__(self):
-        """ Inicializa o repositório, carregando os projetos existentes. """
+        """Inicializa o repositório, carregando os projetos existentes."""
         self.lista_projetos = []
         self.ultimo_id = 0
         self.carrega_dados_csv()
 
     def arquivo_existe(self):
-        """ Verifica se o arquivo CSV existe; se não, cria com o cabeçalho. """
+        """Verifica se o arquivo CSV existe; se não, cria com o cabeçalho."""
         arquivo_existe = Path(self.ARQUIVO_CSV).exists()
         Path(self.ARQUIVO_CSV).parent.mkdir(parents=True, exist_ok=True)
         with open(self.ARQUIVO_CSV, mode="a", newline="", encoding="utf-8") as arquivo:
@@ -25,9 +26,9 @@ class RepositorioProjetos:
                 arquivo.write("id;nome;descricao\n")
 
     def carrega_dados_csv(self):
-        """ Lê os dados do arquivo CSV e popula a lista de projetos. """
+        """Lê os dados do arquivo CSV e popula a lista de projetos."""
         try:
-            with open(self.ARQUIVO_CSV, mode="r", encoding='utf-8') as arquivo:
+            with open(self.ARQUIVO_CSV, encoding="utf-8") as arquivo:
                 next(arquivo)
                 for linha in arquivo:
                     if not linha.strip():
@@ -40,7 +41,7 @@ class RepositorioProjetos:
             self.arquivo_existe()
 
     def salvar_dados_csv(self, nome, descricao):
-        """ Adiciona um novo projeto ao arquivo CSV. """
+        """Adiciona um novo projeto ao arquivo CSV."""
         self.arquivo_existe()
 
         # Cria o objeto antes de gravar: se os dados forem inválidos, nada vai para o CSV
@@ -53,14 +54,14 @@ class RepositorioProjetos:
             return novo_projeto
 
     def salvar_arquivo_completo(self):
-        """ Reescreve o CSV inteiro para manter a integridade após edições ou exclusões. """
+        """Reescreve o CSV inteiro para manter a integridade após edições ou exclusões."""
         with open(self.ARQUIVO_CSV, mode="w", newline="", encoding="utf-8") as arquivo:
             arquivo.write("id;nome;descricao\n")
             for proj in self.lista_projetos:
                 arquivo.write(f"{proj.id};{proj.nome};{proj.descricao}\n")
 
     def editar_projeto(self, projeto_id, nome=None, descricao=None):
-        """ Edita os dados de um projeto existente. """
+        """Edita os dados de um projeto existente."""
         for proj in self.lista_projetos:
             if proj.id == projeto_id:
                 if nome:
@@ -72,7 +73,7 @@ class RepositorioProjetos:
         return None
 
     def excluir_projeto(self, projeto_id):
-        """ Remove um projeto da lista e do arquivo. """
+        """Remove um projeto da lista e do arquivo."""
         for proj in self.lista_projetos:
             if proj.id == projeto_id:
                 self.lista_projetos.remove(proj)
@@ -81,6 +82,10 @@ class RepositorioProjetos:
         return None
 
     def buscar_por_texto(self, termo):
-        """ Filtra projetos por nome ou descrição. """
+        """Filtra projetos por nome ou descrição."""
         termo = termo.lower()
-        return [p for p in self.lista_projetos if termo in p.nome.lower() or termo in p.descricao.lower()]
+        return [
+            p
+            for p in self.lista_projetos
+            if termo in p.nome.lower() or termo in p.descricao.lower()
+        ]

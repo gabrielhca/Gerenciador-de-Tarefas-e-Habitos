@@ -1,26 +1,28 @@
-""" Módulo responsável pela geração de relatórios de tarefas. """
+"""Módulo responsável pela geração de relatórios de tarefas."""
 
 from datetime import date, timedelta
 
 
 def filtrar_tarefas_pendentes(lista_tarefas):
-    """ Retorna uma lista de tarefas que não estão concluídas. """
+    """Retorna uma lista de tarefas que não estão concluídas."""
     return [tarefa for tarefa in lista_tarefas if not tarefa.concluida]
 
 
 def filtrar_tarefas_concluidas(lista_tarefas):
-    """ Retorna uma lista de tarefas que estão concluídas. """
+    """Retorna uma lista de tarefas que estão concluídas."""
     return [tarefa for tarefa in lista_tarefas if tarefa.concluida]
 
 
 def filtrar_tarefas_atrasadas(lista_tarefas):
-    """ Retorna uma lista de tarefas que estão atrasadas. """
+    """Retorna uma lista de tarefas que estão atrasadas."""
     hoje = date.today()
-    return [tarefa for tarefa in lista_tarefas if not tarefa.concluida and tarefa.data_limite < hoje]
+    return [
+        tarefa for tarefa in lista_tarefas if not tarefa.concluida and tarefa.data_limite < hoje
+    ]
 
 
 def calcula_percentual_conclusao(lista_tarefas):
-    """ Calcula o percentual de tarefas concluídas. """
+    """Calcula o percentual de tarefas concluídas."""
     total_tarefas = len(lista_tarefas)
     if total_tarefas == 0:
         return 0.0
@@ -31,7 +33,7 @@ def calcula_percentual_conclusao(lista_tarefas):
 
 
 def obter_categoria_de_prazos(lista_tarefas):
-    """ Categoriza as tarefas por urgência. """
+    """Categoriza as tarefas por urgência."""
 
     hoje = date.today()
     amanha = hoje + timedelta(days=1)
@@ -39,12 +41,7 @@ def obter_categoria_de_prazos(lista_tarefas):
 
     pendentes = filtrar_tarefas_pendentes(lista_tarefas)
 
-    radar = {
-        "Atrasadas": [],
-        "Urgentes": [],
-        "Próximas": [],
-        "Futuras": []
-    }
+    radar = {"Atrasadas": [], "Urgentes": [], "Próximas": [], "Futuras": []}
 
     for tarefa in pendentes:
         if tarefa.data_limite < hoje:
@@ -60,7 +57,7 @@ def obter_categoria_de_prazos(lista_tarefas):
 
 
 def calcular_pontualidade(lista_tarefas):
-    """ Retorna a porcentagem de tarefas entregues no prazo. """
+    """Retorna a porcentagem de tarefas entregues no prazo."""
 
     if not lista_tarefas:
         return 0.0
@@ -81,7 +78,7 @@ def calcular_pontualidade(lista_tarefas):
 
 
 def obter_diagnostico_tarefas(prazos, taxa_conclusao):
-    """ Gera um diagnóstico baseado nos prazos das tarefas. """
+    """Gera um diagnóstico baseado nos prazos das tarefas."""
 
     quantidade_atrasadas = len(prazos["Atrasadas"])
     quantidade_urgentes = len(prazos["Urgentes"])
@@ -97,7 +94,7 @@ def obter_diagnostico_tarefas(prazos, taxa_conclusao):
 
 
 def gerar_desempenho_tarefas(lista_tarefas):
-    """ Gera um relatório de desempenho para uma lista de tarefas. """
+    """Gera um relatório de desempenho para uma lista de tarefas."""
 
     if not lista_tarefas:
         return None
@@ -117,10 +114,10 @@ def gerar_desempenho_tarefas(lista_tarefas):
             "tarefas_concluidas": concluidas,
             "tarefas_atrasadas": atrasadas,
             "taxa_conclusao_percentual": taxa_conclusao,
-            "taxa_pontualidade_percentual": taxa_pontualidade
+            "taxa_pontualidade_percentual": taxa_pontualidade,
         },
         "prazos": prazos,
-        "diagnostico": obter_diagnostico_tarefas(prazos, taxa_conclusao)
+        "diagnostico": obter_diagnostico_tarefas(prazos, taxa_conclusao),
     }
 
     return relatorio

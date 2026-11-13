@@ -1,35 +1,37 @@
-""" Módulo responsável pela persistência de dados (repositórios) de hábitos. """
+"""Módulo responsável pela persistência de dados (repositórios) de hábitos."""
 
-from pathlib import Path
 from datetime import date
+from pathlib import Path
+
 from src.models import Habito
 from src.utils import PASTA_DADOS, formatar_data_para_string
 
 
-class RepositorioHabitos():
-    """ Gerencia a persistência e recuperação de hábitos no arquivo CSV. """
+class RepositorioHabitos:
+    """Gerencia a persistência e recuperação de hábitos no arquivo CSV."""
 
     ARQUIVO_CSV = PASTA_DADOS / "habitos.csv"
 
     def __init__(self):
-        """ Inicializa o repositório, carregando os dados existentes. """
+        """Inicializa o repositório, carregando os dados existentes."""
         self.lista_habitos = []
         self.ultimo_id = 0
         self.carrega_dados_csv()
 
     def arquivo_existe(self):
-        """ Verifica se o arquivo CSV existe; se não, cria com o cabeçalho. """
+        """Verifica se o arquivo CSV existe; se não, cria com o cabeçalho."""
         arquivo_existe = Path(self.ARQUIVO_CSV).exists()
         Path(self.ARQUIVO_CSV).parent.mkdir(parents=True, exist_ok=True)
         with open(self.ARQUIVO_CSV, mode="a", newline="", encoding="utf-8") as arquivo:
             if not arquivo_existe:
                 arquivo.write(
-                    "id;nome;frequencia;contador_execucoes;data_criacao;data_ultima_execucao;projeto_id\n")
+                    "id;nome;frequencia;contador_execucoes;data_criacao;data_ultima_execucao;projeto_id\n"
+                )
 
     def carrega_dados_csv(self):
-        """ Lê os dados do arquivo CSV e popula a lista de hábitos. """
+        """Lê os dados do arquivo CSV e popula a lista de hábitos."""
         try:
-            with open(self.ARQUIVO_CSV, mode="r", encoding='utf-8') as arquivo:
+            with open(self.ARQUIVO_CSV, encoding="utf-8") as arquivo:
                 next(arquivo)
                 for linha in arquivo:
                     if not linha.strip():
@@ -41,8 +43,10 @@ class RepositorioHabitos():
         except FileNotFoundError:
             self.arquivo_existe()
 
-    def salvar_dados_csv(self, nome, frequencia, contador_execucoes, data_ultima_execucao=None, projeto_id=None):
-        """ Adiciona um novo hábito ao arquivo CSV. """
+    def salvar_dados_csv(
+        self, nome, frequencia, contador_execucoes, data_ultima_execucao=None, projeto_id=None
+    ):
+        """Adiciona um novo hábito ao arquivo CSV."""
         self.arquivo_existe()
 
         data_criacao = date.today()
@@ -51,32 +55,44 @@ class RepositorioHabitos():
         projeto_id_str = str(projeto_id) if projeto_id else ""
 
         # Cria o objeto antes de gravar: se os dados forem inválidos, nada vai para o CSV
-        novo_habito = Habito(self.ultimo_id + 1, nome,
-                             frequencia, contador_execucoes, data_criacao, data_ultima_execucao, projeto_id)
+        novo_habito = Habito(
+            self.ultimo_id + 1,
+            nome,
+            frequencia,
+            contador_execucoes,
+            data_criacao,
+            data_ultima_execucao,
+            projeto_id,
+        )
 
         with open(self.ARQUIVO_CSV, mode="a", newline="", encoding="utf-8") as arquivo:
             self.ultimo_id += 1
             arquivo.write(
-                f"{self.ultimo_id};{nome};{frequencia};{contador_execucoes};{data_criacao_str};{data_ultima_execucao_str};{projeto_id_str}\n")
+                f"{self.ultimo_id};{nome};{frequencia};{contador_execucoes};{data_criacao_str};{data_ultima_execucao_str};{projeto_id_str}\n"
+            )
             self.lista_habitos.append(novo_habito)
 
     def salvar_arquivo_completo(self):
-        """ Reescreve o CSV inteiro com o estado atual dos hábitos, garantindo a integridade dos dados. """
+        """Reescreve o CSV inteiro com o estado atual dos hábitos, garantindo a integridade dos dados."""
         with open(self.ARQUIVO_CSV, mode="w", newline="", encoding="utf-8") as arquivo:
             arquivo.write(
-                "id;nome;frequencia;contador_execucoes;data_criacao;data_ultima_execucao;projeto_id\n")
+                "id;nome;frequencia;contador_execucoes;data_criacao;data_ultima_execucao;projeto_id\n"
+            )
             for habito in self.lista_habitos:
-                data_criacao_str = formatar_data_para_string(
-                    habito.data_criacao)
-                data_ultima_execucao_str = formatar_data_para_string(
-                    habito.data_ultima_execucao) if habito.data_ultima_execucao else ""
+                data_criacao_str = formatar_data_para_string(habito.data_criacao)
+                data_ultima_execucao_str = (
+                    formatar_data_para_string(habito.data_ultima_execucao)
+                    if habito.data_ultima_execucao
+                    else ""
+                )
                 projeto_id_str = str(habito.projeto_id) if habito.projeto_id else ""
 
                 arquivo.write(
-                    f"{habito.id};{habito.nome};{habito.frequencia};{habito.contador_execucoes};{data_criacao_str};{data_ultima_execucao_str};{projeto_id_str}\n")
+                    f"{habito.id};{habito.nome};{habito.frequencia};{habito.contador_execucoes};{data_criacao_str};{data_ultima_execucao_str};{projeto_id_str}\n"
+                )
 
     def registrar_execucao_habito(self, habito_id):
-        """ Registra a execução de um hábito, incrementando seu contador."""
+        """Registra a execução de um hábito, incrementando seu contador."""
         for habito in self.lista_habitos:
             if habito.id == habito_id:
                 habito.contador_execucoes += 1
@@ -85,7 +101,7 @@ class RepositorioHabitos():
                 return habito.nome, habito.contador_execucoes
 
     def excluir_habito(self, habito_id):
-        """ Excluir um hábito do repositório. """
+        """Excluir um hábito do repositório."""
         for habito in self.lista_habitos:
             if habito.id == habito_id:
                 self.lista_habitos.remove(habito)
@@ -93,7 +109,7 @@ class RepositorioHabitos():
                 return habito
 
     def editar_habito(self, habito_id, nome=None, frequencia=None):
-        """ Edita os dados de um hábito existente. """
+        """Edita os dados de um hábito existente."""
         for habito in self.lista_habitos:
             if habito.id == habito_id:
                 if nome:
@@ -104,7 +120,7 @@ class RepositorioHabitos():
                 return habito
 
     def desvincular_projeto(self, projeto_id):
-        """ Remove o vínculo dos hábitos com um projeto excluído. Retorna quantos foram alterados. """
+        """Remove o vínculo dos hábitos com um projeto excluído. Retorna quantos foram alterados."""
         alterados = 0
         for habito in self.lista_habitos:
             if habito.projeto_id == projeto_id:
@@ -115,6 +131,6 @@ class RepositorioHabitos():
         return alterados
 
     def buscar_por_texto(self, termo):
-        """ Filtra os habitos que contém o termo no nome. """
+        """Filtra os habitos que contém o termo no nome."""
         termo = termo.lower()
         return [h for h in self.lista_habitos if termo in h.nome.lower()]

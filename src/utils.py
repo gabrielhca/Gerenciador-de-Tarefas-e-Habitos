@@ -1,4 +1,4 @@
-""" Guarda funções utilitárias. """
+"""Guarda funções utilitárias."""
 
 import os
 import unicodedata
@@ -11,7 +11,7 @@ PASTA_RELATORIOS = PASTA_RAIZ / "relatorios"
 
 
 def formatar_data(data_str):
-    """ Converte uma string de data no formato DD-MM-AAAA para um objeto date. """
+    """Converte uma string de data no formato DD-MM-AAAA para um objeto date."""
     try:
         return datetime.strptime(data_str, "%d-%m-%Y").date()
     except ValueError:
@@ -20,7 +20,7 @@ def formatar_data(data_str):
 
 
 def normalizar_frequencia(texto):
-    """ Converte variações como 'Diário', 'diária' ou 'semana' para 'diario' ou 'semanal'.
+    """Converte variações como 'Diário', 'diária' ou 'semana' para 'diario' ou 'semanal'.
 
     Retorna None se a frequência não for reconhecida.
     """
@@ -36,15 +36,16 @@ def normalizar_frequencia(texto):
 
 
 def formatar_data_para_string(data):
-    """ Converte um objeto date para uma string no formato DD-MM-AAAA. """
+    """Converte um objeto date para uma string no formato DD-MM-AAAA."""
     if not data:
         return ""
     if isinstance(data, str):
         return data
     return data.strftime("%d-%m-%Y")
 
+
 def exportar_relatorio(texto, nome_arquivo):
-    """ Exporta um texto para um arquivo de texto. """
+    """Exporta um texto para um arquivo de texto."""
 
     pasta = PASTA_RELATORIOS
     if not os.path.exists(pasta):
@@ -55,6 +56,5 @@ def exportar_relatorio(texto, nome_arquivo):
         with open(caminho_arquivo, "w", encoding="utf-8") as arquivo:
             arquivo.write(texto)
         print(f"Relatório exportado para {caminho_arquivo}")
-    except IOError as e:
+    except OSError as e:
         print(f"Erro ao exportar o relatório: {e}")
-            

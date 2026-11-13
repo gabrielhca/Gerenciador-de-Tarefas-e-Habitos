@@ -18,3 +18,8 @@ dev = [
     "pytest>=9.2.0",
     "ruff>=0.17.5",
 ]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+# Linhas longas restantes são strings que o formatador não quebra sozinho
+ignore = ["E501"]
