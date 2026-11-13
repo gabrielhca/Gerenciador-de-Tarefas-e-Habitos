@@ -43,10 +43,12 @@ class RepositorioProjetos:
         """ Adiciona um novo projeto ao arquivo CSV. """
         self.arquivo_existe()
 
+        # Cria o objeto antes de gravar: se os dados forem inválidos, nada vai para o CSV
+        novo_projeto = Projeto(self.ultimo_id + 1, nome, descricao)
+
         with open(self.ARQUIVO_CSV, mode="a", newline="", encoding="utf-8") as arquivo:
             self.ultimo_id += 1
             arquivo.write(f"{self.ultimo_id};{nome};{descricao}\n")
-            novo_projeto = Projeto(self.ultimo_id, nome, descricao)
             self.lista_projetos.append(novo_projeto)
             return novo_projeto
 

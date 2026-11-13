@@ -14,13 +14,18 @@ def exibir_dados(dados, tipo):
         print(item)
 
 
+def ler_texto_obrigatorio(mensagem):
+    """ Pede um texto ao usuário até que ele não seja vazio. """
+    while True:
+        texto = input(mensagem).strip()
+        if texto:
+            return texto
+        print("Este campo não pode ser vazio.")
+
+
 def preencher_dados_projeto():
     """ Solicita ao usuário os dados para criar um novo projeto. """
-    while True:
-        nome = input("Nome do projeto: ")
-        if nome.strip():
-            break
-        print("O nome do projeto não pode ser vazio.")
+    nome = ler_texto_obrigatorio("Nome do projeto: ")
     descricao = input("Descrição do projeto: ")
     return nome, descricao
 
@@ -35,7 +40,7 @@ def editar_dados_projeto(projeto):
 
 def preencher_dados_tarefa(repo_projetos=None):
     """ Solicita ao usuário os dados para criar uma nova tarefa. """
-    titulo = input("Título da tarefa: ")
+    titulo = ler_texto_obrigatorio("Título da tarefa: ")
     descricao = input("Descrição da tarefa: ")
 
     while True:
@@ -89,7 +94,7 @@ def editar_dados_habito(habito):
 
 def preencher_dados_habito(repo_projetos=None):
     """ Solicita ao usuário os dados para criar um novo hábito. """
-    nome = input("Nome do hábito: ")
+    nome = ler_texto_obrigatorio("Nome do hábito: ")
     frequencia = input("Frequência (diario, semanal): ")
     
     while True:

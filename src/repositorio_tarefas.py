@@ -53,21 +53,23 @@ class RepositorioTarefas():
         projeto_id_str = str(projeto_id) if projeto_id else ""
         data_limite = formatar_data(data_limite_str)
 
+        # Cria o objeto antes de gravar: se os dados forem inválidos, nada vai para o CSV
+        nova_tarefa = Tarefa(
+            self.ultimo_id + 1,
+            titulo,
+            descricao,
+            data_limite,
+            concluida,
+            data_criacao,
+            data_conclusao,
+            projeto_id
+        )
+
         with open(self.ARQUIVO_CSV, mode="a", newline="", encoding="utf-8") as arquivo:
             self.ultimo_id += 1
             concluida_str = "1" if concluida else "0"
             arquivo.write(
                 f"{self.ultimo_id};{titulo};{descricao};{data_limite_str};{concluida_str};{data_criacao_str};{data_conclusao_str};{projeto_id_str}\n")
-            nova_tarefa = Tarefa(
-                self.ultimo_id,
-                titulo,
-                descricao,
-                data_limite,
-                concluida,
-                data_criacao,
-                data_conclusao,
-                projeto_id
-            )
             self.lista_tarefas.append(nova_tarefa)
 
     def salvar_arquivo_completo(self):

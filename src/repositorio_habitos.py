@@ -50,12 +50,14 @@ class RepositorioHabitos():
         data_ultima_execucao_str = formatar_data_para_string(data_ultima_execucao)
         projeto_id_str = str(projeto_id) if projeto_id else ""
 
+        # Cria o objeto antes de gravar: se os dados forem inválidos, nada vai para o CSV
+        novo_habito = Habito(self.ultimo_id + 1, nome,
+                             frequencia, contador_execucoes, data_criacao, data_ultima_execucao, projeto_id)
+
         with open(self.ARQUIVO_CSV, mode="a", newline="", encoding="utf-8") as arquivo:
             self.ultimo_id += 1
             arquivo.write(
                 f"{self.ultimo_id};{nome};{frequencia};{contador_execucoes};{data_criacao_str};{data_ultima_execucao_str};{projeto_id_str}\n")
-            novo_habito = Habito(self.ultimo_id, nome,
-                                 frequencia, contador_execucoes, data_criacao, data_ultima_execucao, projeto_id)
             self.lista_habitos.append(novo_habito)
 
     def salvar_arquivo_completo(self):
